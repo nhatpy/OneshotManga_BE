@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RequestUserDto {
+public class RequestCreateUserDto {
     @NotEmpty(message = "Email is required")
     @Email(regexp = "^[A-Za-z0-9+_.-]+@(.+)$", message = "Email is invalid")
     String email;

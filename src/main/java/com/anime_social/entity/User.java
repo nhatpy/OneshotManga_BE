@@ -3,8 +3,6 @@ package com.anime_social.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -29,7 +27,6 @@ public class User {
     String email;
 
     @NotEmpty(message = "Password is required")
-    @Size(min = 6, message = "Password must be at least 6 characters")
     @Column(name = "password", nullable = false)
     String password;
 
