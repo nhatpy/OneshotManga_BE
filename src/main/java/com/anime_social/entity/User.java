@@ -1,12 +1,10 @@
 package com.anime_social.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Date;
+import java.util.HashSet;
 
 @Data
 @Builder
@@ -15,28 +13,15 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "user")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id")
-    String id;
-
-    @NotEmpty(message = "Email is required")
-    @Email(regexp = "^[A-Za-z0-9+_.-]+@(.+)$", message = "Email is invalid")
+public class User extends BaseEntity{
     @Column(name = "email", unique = true, nullable = false)
     String email;
 
-    @NotEmpty(message = "Password is required")
     @Column(name = "password", nullable = false)
     String password;
 
-    @NotEmpty(message = "Full name is required")
-    @Column(name = "full_name", unique = true, nullable = false)
+    @Column(name = "full_name", nullable = false)
     String fullName;
-
-    @NotEmpty(message = "Phone number is required")
-    @Column(name = "phone_number", nullable = false)
-    String phoneNumber;
 
     @Column(name = "avatar")
     String avatar;
@@ -46,7 +31,7 @@ public class User {
     Integer wallet = 0;
 
     @Column(name = "role")
-    String role;
+    HashSet<String> role;
 
     @Column(name = "isVerified")
     @Builder.Default
@@ -59,12 +44,4 @@ public class User {
     @Column(name = "is_banned")
     @Builder.Default
     Boolean isBanned = false;
-
-    @Column(name = "create_at")
-    @Builder.Default
-    Date createAt = new Date();
-
-    @Column(name = "update_at")
-    @Builder.Default
-    Date updateAt = new Date();
 }
