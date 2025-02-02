@@ -7,16 +7,15 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class RequestLoginUserDto {
-    @NotEmpty(message = "Email is required")
-    @Email(regexp = "^[A-Za-z0-9+_.-]+@(.+)$", message = "Email is invalid")
+public class AuthenticateRequest {
+    @NotEmpty(message = "YOU_MISSING_REQUIRED_FIELD")
+    @Email(regexp = "^[A-Za-z0-9+_.-]+@(.+)$", message = "EMAIL_IS_INVALID")
     String email;
 
-    @NotEmpty(message = "Password is required")
-    @Size(min = 6, message = "Password must be at least 6 characters")
+    @NotEmpty(message = "YOU_MISSING_REQUIRED_FIELD")
+    @Size(min = 6, message = "PASSWORD_AT_LEAST_6_CHARACTERS")
     String password;
 }
