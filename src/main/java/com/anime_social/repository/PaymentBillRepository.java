@@ -1,9 +1,9 @@
 package com.anime_social.repository;
 
-import com.anime_social.entity.InvalidatedToken;
+import com.anime_social.entity.PaymentBill;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface InvalidatedTokenRepository extends JpaRepository<InvalidatedToken, String> {
+public interface PaymentBillRepository extends JpaRepository<PaymentBill, String> {
 }
