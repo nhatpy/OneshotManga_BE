@@ -1,6 +1,6 @@
 package com.anime_social.dto.response;
 
-import com.anime_social.entity.User;
+import com.anime_social.models.User;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 

@@ -13,6 +13,7 @@ public enum ErrorCode {
     PASSWORD_AT_LEAST_6_CHARACTERS("Password at least 6 characters", HttpStatus.BAD_REQUEST),
     INVALID_TOKEN("Token is invalid", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED("Unauthorized", HttpStatus.UNAUTHORIZED),
+    INVALID_VERIFY_CODE("Invalid verify code", HttpStatus.BAD_REQUEST),
     ;
     String message;
     HttpStatus httpStatus;
