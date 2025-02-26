@@ -15,6 +15,7 @@ public enum ErrorCode {
     UNAUTHORIZED("Unauthorized", HttpStatus.UNAUTHORIZED),
     INVALID_VERIFY_CODE("Invalid verify code", HttpStatus.BAD_REQUEST),
     ;
+
     String message;
     HttpStatus httpStatus;
 

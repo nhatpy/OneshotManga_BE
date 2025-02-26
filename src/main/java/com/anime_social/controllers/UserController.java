@@ -3,6 +3,8 @@ package com.anime_social.controllers;
 import com.anime_social.dto.request.UpdateUserRequest;
 import com.anime_social.dto.response.AppResponse;
 import com.anime_social.services.UserService;
+
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     UserService userService;
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/get-all")
     public AppResponse getUsers() {
         return userService.getUsers();
@@ -31,13 +32,13 @@ public class UserController {
         return userService.getUserById(id);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasRole('USER')")
     @PatchMapping("/update/{id}")
-    public AppResponse updateUser(@PathVariable String id, @RequestBody UpdateUserRequest userRequest) {
+    public AppResponse updateUser(@PathVariable String id, @RequestBody @Valid UpdateUserRequest userRequest) {
         return userService.updateUser(id, userRequest);
     }
 
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{id}")
     public AppResponse deleteUser(@PathVariable String id) {
         return userService.deleteUser(id);
