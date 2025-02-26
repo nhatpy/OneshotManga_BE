@@ -22,6 +22,9 @@ public class Manga extends BaseEntity {
     @Column(name = "name")
     String name;
 
+    @Column(name = "slug")
+    String slug;
+
     @Column(name = "description")
     String description;
 

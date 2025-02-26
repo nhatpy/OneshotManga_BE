@@ -6,12 +6,10 @@ import com.anime_social.dto.request.RegisterRequest;
 import com.anime_social.dto.request.AuthenticateRequest;
 import com.anime_social.dto.response.AppResponse;
 import com.anime_social.dto.response.AuthenticateResponse;
-import com.anime_social.models.InvalidatedToken;
 import com.anime_social.models.User;
 import com.anime_social.exception.ErrorCode;
 import com.anime_social.exception.CusRunTimeException;
 import com.anime_social.models.VerifyUserCode;
-import com.anime_social.repositorys.InvalidatedTokenRepository;
 import com.anime_social.repositorys.UserRepository;
 import com.anime_social.repositorys.VerifyUserCodeRepository;
 import com.anime_social.util.enums.Role;
@@ -45,9 +43,9 @@ import java.util.*;
 @Slf4j
 public class AuthenticationService {
     UserRepository userRepository;
-    InvalidatedTokenRepository invalidatedTokenRepository;
     VerifyUserCodeRepository verifyUserCodeRepository;
     EmailService emailService;
+    InvalidatedTokenService invalidatedTokenService;
     @NonFinal
     @Value("${JWT_SECRET}")
     String jwtSecret;
@@ -114,6 +112,7 @@ public class AuthenticationService {
                 .data(authenticateResponse)
                 .build();
     }
+
     public AppResponse introspect(IntrospectRequest introspectRequest) throws JOSEException, ParseException {
         String token = introspectRequest.getToken();
         try {
@@ -121,24 +120,18 @@ public class AuthenticationService {
         } catch (CusRunTimeException e) {
             throw new CusRunTimeException(ErrorCode.INVALID_TOKEN);
         }
-
         return AppResponse.builder()
                 .message("Valid token")
                 .status(HttpStatus.OK)
                 .build();
     }
+
     public AppResponse logout(LogoutRequest request) throws ParseException, JOSEException {
         var signToken = verifyToken(request.getToken());
 
         String jid = signToken.getJWTClaimsSet().getJWTID();
-        Date expirationTime = signToken.getJWTClaimsSet().getExpirationTime();
 
-        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
-                .id(jid)
-                .expiryTime(expirationTime)
-                .build();
-
-        invalidatedTokenRepository.save(invalidatedToken);
+        invalidatedTokenService.addToBlacklistedToken(jid);
 
         return AppResponse.builder()
                 .status(HttpStatus.OK)
@@ -169,6 +162,7 @@ public class AuthenticationService {
 
         return signedJWT.serialize();
     }
+
     private SignedJWT verifyToken(String token) throws JOSEException, ParseException {
         JWSVerifier jwsVerifier = new MACVerifier(jwtSecret.getBytes(StandardCharsets.UTF_8));
 
@@ -181,9 +175,9 @@ public class AuthenticationService {
         if (!(isValid && expirationTime.after(new Date()))) {
             throw new CusRunTimeException(ErrorCode.INVALID_TOKEN);
         }
-        if (invalidatedTokenRepository
-                .existsById(signedJWT.getJWTClaimsSet().getJWTID()))
+        if (invalidatedTokenService.isBlacklistedToken(signedJWT.getJWTClaimsSet().getJWTID())) {
             throw new CusRunTimeException(ErrorCode.INVALID_TOKEN);
+        }
 
         return signedJWT;
     }

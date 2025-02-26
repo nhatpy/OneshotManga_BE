@@ -31,6 +31,7 @@ public class UserService {
                 .data(users)
                 .build();
     }
+
     public AppResponse getUserById(String id) {
         Optional<User> user = userRepository.findById(id);
 
@@ -59,12 +60,10 @@ public class UserService {
         } else {
             User userUpdate = user.get();
 
-            userUpdate.setFullName(userRequest.getFullName());
-            userUpdate.setAvatar(userRequest.getAvatar());
-            userUpdate.setWallet(userRequest.getWallet());
-            userUpdate.setIsVerified(userRequest.getIsVerified());
-            userUpdate.setIsWarning(userRequest.getIsWarning());
-            userUpdate.setIsBanned(userRequest.getIsBanned());
+            userRequest.getFullName().ifPresent(userUpdate::setFullName);
+            userRequest.getAvatar().ifPresent(userUpdate::setAvatar);
+            userRequest.getWallet().ifPresent(userUpdate::setWallet);
+            userRequest.getIsWarning().ifPresent(userUpdate::setIsWarning);
 
             userRepository.save(userUpdate);
 

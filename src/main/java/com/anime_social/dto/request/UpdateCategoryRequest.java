@@ -2,7 +2,6 @@ package com.anime_social.dto.request;
 
 import java.util.Optional;
 
-import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,11 +12,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateUserRequest {
-    @Size(min = 6, message = "PASSWORD_AT_LEAST_6_CHARACTERS")
-    Optional<String> password;
-    Optional<String> avatar;
-    Optional<String> fullName;
-    Optional<Integer> wallet;
-    Optional<Boolean> isWarning;
+public class UpdateCategoryRequest {
+    Optional<String> name;
+    Optional<String> description;
 }
