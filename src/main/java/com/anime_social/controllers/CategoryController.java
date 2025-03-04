@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.anime_social.dto.request.PostCategoryRequest;
-import com.anime_social.dto.request.UpdateCategoryRequest;
+import com.anime_social.dto.request.CreateCategory;
+import com.anime_social.dto.request.UpdateCategory;
 import com.anime_social.dto.response.AppResponse;
 import com.anime_social.services.CategoryService;
 
@@ -32,14 +32,15 @@ public class CategoryController {
         return categoryService.getCategories();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
-    public AppResponse createCategory(@RequestBody @Valid PostCategoryRequest request) {
+    public AppResponse createCategory(@RequestBody @Valid CreateCategory request) {
         return categoryService.createCategory(request);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/update/{id}")
-    public AppResponse updateCategory(@PathVariable String id, @RequestBody UpdateCategoryRequest request) {
+    public AppResponse updateCategory(@PathVariable String id, @RequestBody UpdateCategory request) {
         return categoryService.updateCategory(id, request);
     }
 

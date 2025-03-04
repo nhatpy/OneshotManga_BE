@@ -13,7 +13,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateUserRequest {
+public class UpdateUser {
     @Size(min = 6, message = "PASSWORD_AT_LEAST_6_CHARACTERS")
     Optional<String> password;
     Optional<String> avatar;

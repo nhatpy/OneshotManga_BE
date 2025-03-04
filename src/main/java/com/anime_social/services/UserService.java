@@ -1,6 +1,6 @@
 package com.anime_social.services;
 
-import com.anime_social.dto.request.UpdateUserRequest;
+import com.anime_social.dto.request.UpdateUser;
 import com.anime_social.dto.response.AppResponse;
 import com.anime_social.models.User;
 import com.anime_social.exception.CusRunTimeException;
@@ -49,7 +49,7 @@ public class UserService {
         }
     }
 
-    public AppResponse updateUser(String id, UpdateUserRequest userRequest) {
+    public AppResponse updateUser(String id, UpdateUser userRequest) {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isEmpty()) {
@@ -108,5 +108,38 @@ public class UserService {
                 .message("Get current user successfully")
                 .data(currentUser)
                 .build();
+    }
+
+    public AppResponse warningUser(String id) {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isEmpty()) {
+            return AppResponse.builder()
+                    .status(HttpStatus.NOT_FOUND)
+                    .message("User not found")
+                    .build();
+        } else {
+            User userUpdate = user.get();
+            if (userUpdate.getIsWarning()) {
+                userUpdate.setIsBanned(true);
+
+                userRepository.save(userUpdate);
+
+                return AppResponse.builder()
+                        .status(HttpStatus.OK)
+                        .message("Banned user")
+                        .data(userUpdate)
+                        .build();
+            }
+            userUpdate.setIsWarning(true);
+
+            userRepository.save(userUpdate);
+
+            return AppResponse.builder()
+                    .status(HttpStatus.OK)
+                    .message("Warning user successfully")
+                    .data(userUpdate)
+                    .build();
+        }
     }
 }

@@ -1,9 +1,9 @@
 package com.anime_social.services;
 
-import com.anime_social.dto.request.IntrospectRequest;
-import com.anime_social.dto.request.LogoutRequest;
-import com.anime_social.dto.request.RegisterRequest;
-import com.anime_social.dto.request.AuthenticateRequest;
+import com.anime_social.dto.request.Introspect;
+import com.anime_social.dto.request.Logout;
+import com.anime_social.dto.request.Register;
+import com.anime_social.dto.request.Authenticate;
 import com.anime_social.dto.response.AppResponse;
 import com.anime_social.dto.response.AuthenticateResponse;
 import com.anime_social.models.User;
@@ -54,7 +54,7 @@ public class AuthenticationService {
     @Value("${EXPIRED_TIME}")
     long jwtExpiredTime;
 
-    public AppResponse register(RegisterRequest registerRequest) throws MessagingException {
+    public AppResponse register(Register registerRequest) throws MessagingException {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         User existed_user = userRepository.findByEmail(registerRequest.getEmail());
 
@@ -83,11 +83,17 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AppResponse login(AuthenticateRequest authenticateRequest) {
+    public AppResponse login(Authenticate authenticateRequest) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         User user = userRepository.findByEmail(authenticateRequest.getEmail());
         if (user == null) {
             throw new CusRunTimeException(ErrorCode.EMAIL_NOT_FOUND);
+        }
+        if (user.getIsBanned()) {
+            return AppResponse.builder()
+                    .status(HttpStatus.FORBIDDEN)
+                    .message("User is banned")
+                    .build();
         }
 
         if (!passwordEncoder.matches(authenticateRequest.getPassword(), user.getPassword())) {
@@ -113,7 +119,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AppResponse introspect(IntrospectRequest introspectRequest) throws JOSEException, ParseException {
+    public AppResponse introspect(Introspect introspectRequest) throws JOSEException, ParseException {
         String token = introspectRequest.getToken();
         try {
             verifyToken(token);
@@ -126,7 +132,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AppResponse logout(LogoutRequest request) throws ParseException, JOSEException {
+    public AppResponse logout(Logout request) throws ParseException, JOSEException {
         var signToken = verifyToken(request.getToken());
 
         String jid = signToken.getJWTClaimsSet().getJWTID();
