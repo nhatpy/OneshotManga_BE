@@ -1,24 +1,21 @@
 package com.anime_social.dto.request;
 
-import jakarta.validation.constraints.Email;
+import lombok.AllArgsConstructor;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RegisterRequest {
+public class PostComment {
     @NotEmpty(message = "YOU_MISSING_REQUIRED_FIELD")
-    @Email(regexp = "^[A-Za-z0-9+_.-]+@(.+)$", message = "EMAIL_IS_INVALID")
-    String email;
-
+    String userId;
     @NotEmpty(message = "YOU_MISSING_REQUIRED_FIELD")
-    @Size(min = 6, message = "PASSWORD_AT_LEAST_6_CHARACTERS")
-    String password;
-
+    String chapterId;
     @NotEmpty(message = "YOU_MISSING_REQUIRED_FIELD")
-    String fullName;
+    String content;
 }

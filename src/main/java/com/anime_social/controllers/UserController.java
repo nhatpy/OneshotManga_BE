@@ -1,6 +1,6 @@
 package com.anime_social.controllers;
 
-import com.anime_social.dto.request.UpdateUserRequest;
+import com.anime_social.dto.request.UpdateUser;
 import com.anime_social.dto.response.AppResponse;
 import com.anime_social.services.UserService;
 
@@ -34,7 +34,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('USER')")
     @PatchMapping("/update/{id}")
-    public AppResponse updateUser(@PathVariable String id, @RequestBody @Valid UpdateUserRequest userRequest) {
+    public AppResponse updateUser(@PathVariable String id, @RequestBody @Valid UpdateUser userRequest) {
         return userService.updateUser(id, userRequest);
     }
 
@@ -48,5 +48,11 @@ public class UserController {
     @GetMapping("/current")
     public AppResponse getCurrentUser() {
         return userService.currentUser();
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/warning")
+    public AppResponse warningUser(@RequestParam String id) {
+        return userService.warningUser(id);
     }
 }

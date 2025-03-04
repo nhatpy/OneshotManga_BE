@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.anime_social.dto.request.PostCategoryRequest;
-import com.anime_social.dto.request.UpdateCategoryRequest;
+import com.anime_social.dto.request.CreateCategory;
+import com.anime_social.dto.request.UpdateCategory;
 import com.anime_social.dto.response.AppResponse;
 import com.anime_social.models.Category;
 import com.anime_social.repositorys.CategoryRepository;
@@ -30,7 +30,7 @@ public class CategoryService {
                 .build();
     }
 
-    public AppResponse createCategory(PostCategoryRequest request) {
+    public AppResponse createCategory(CreateCategory request) {
         Optional<Category> category = categoryRepository.findByName(request.getName());
         if (category.isPresent()) {
             return AppResponse.builder()
@@ -53,7 +53,7 @@ public class CategoryService {
                 .build();
     }
 
-    public AppResponse updateCategory(String id, UpdateCategoryRequest request) {
+    public AppResponse updateCategory(String id, UpdateCategory request) {
         Category category = categoryRepository.findById(id).orElse(null);
         if (category == null) {
             return AppResponse.builder()

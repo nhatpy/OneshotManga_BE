@@ -1,6 +1,6 @@
 package com.anime_social.configurations;
 
-import com.anime_social.dto.request.IntrospectRequest;
+import com.anime_social.dto.request.Introspect;
 import com.anime_social.dto.response.AppResponse;
 import com.anime_social.services.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
@@ -28,7 +28,7 @@ public class CustomJwtDecoder implements JwtDecoder {
     @Override
     public Jwt decode(String token) throws JwtException {
         try {
-            AppResponse response = authenticationService.introspect(IntrospectRequest.builder()
+            AppResponse response = authenticationService.introspect(Introspect.builder()
                     .token(token)
                     .build());
 
