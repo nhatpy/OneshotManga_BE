@@ -32,14 +32,15 @@ public class Manga extends BaseEntity {
     String coverImage;
 
     @Column(name = "view")
-    Integer view;
+    @Builder.Default
+    Integer view = 0;
 
     @Column(name = "follow")
-    Integer follow;
+    @Builder.Default
+    Integer follow = 0;
 
     @Column(name = "is_done")
-    @Builder.Default
-    Boolean isDone = false;
+    Boolean isDone;
 
     @Column(name = "is_active")
     @Builder.Default
