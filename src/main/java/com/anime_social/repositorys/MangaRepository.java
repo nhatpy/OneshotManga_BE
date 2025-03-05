@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MangaRepository extends JpaRepository<Manga, String> {
+    Manga findBySlug(String slug);
 }
