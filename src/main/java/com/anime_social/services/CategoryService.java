@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.anime_social.dto.request.CreateCategory;
 import com.anime_social.dto.request.UpdateCategory;
 import com.anime_social.dto.response.AppResponse;
+import com.anime_social.exception.CusRunTimeException;
+import com.anime_social.exception.ErrorCode;
 import com.anime_social.models.Category;
 import com.anime_social.repositorys.CategoryRepository;
 
@@ -33,10 +35,7 @@ public class CategoryService {
     public AppResponse createCategory(CreateCategory request) {
         Optional<Category> category = categoryRepository.findByName(request.getName());
         if (category.isPresent()) {
-            return AppResponse.builder()
-                    .status(HttpStatus.BAD_REQUEST)
-                    .message("Category already exists")
-                    .build();
+            throw new CusRunTimeException(ErrorCode.CATEGORY_ALREADY_EXISTS);
         }
 
         log.info("Create category with request: {}", request);
@@ -56,10 +55,7 @@ public class CategoryService {
     public AppResponse updateCategory(String id, UpdateCategory request) {
         Category category = categoryRepository.findById(id).orElse(null);
         if (category == null) {
-            return AppResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message("Category not found")
-                    .build();
+            throw new CusRunTimeException(ErrorCode.CATEGORY_NOT_FOUND);
         }
 
         request.getName().ifPresent(value -> category.setName(value));
@@ -77,10 +73,7 @@ public class CategoryService {
     public AppResponse deleteCategory(String id) {
         Category category = categoryRepository.findById(id).orElse(null);
         if (category == null) {
-            return AppResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message("Category not found")
-                    .build();
+            throw new CusRunTimeException(ErrorCode.CATEGORY_NOT_FOUND);
         }
 
         categoryRepository.delete(category);

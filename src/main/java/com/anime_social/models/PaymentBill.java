@@ -14,12 +14,11 @@ import lombok.experimental.FieldDefaults;
 @Table(name = "payment_bill")
 public class PaymentBill extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", updatable = false, nullable = false)
     String id;
 
     @Column(name = "amount")
-    Integer amount;
+    Long amount;
 
     @Column(name = "status")
     @Builder.Default

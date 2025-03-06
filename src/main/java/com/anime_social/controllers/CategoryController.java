@@ -2,7 +2,6 @@ package com.anime_social.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.anime_social.dto.request.CreateCategory;
 import com.anime_social.dto.request.UpdateCategory;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/category")
-@RestControllerAdvice
 @RequiredArgsConstructor
 public class CategoryController {
     private final CategoryService categoryService;

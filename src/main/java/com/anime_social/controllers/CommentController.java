@@ -1,7 +1,6 @@
 package com.anime_social.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.anime_social.dto.request.PostComment;
 import com.anime_social.dto.request.UpdateComment;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
-@RestControllerAdvice
 @RequiredArgsConstructor
 @RequestMapping("/comment")
 public class CommentController {
@@ -28,7 +26,7 @@ public class CommentController {
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @PostMapping("/create")
-    public AppResponse createComment(@RequestBody @Valid PostComment request) {
+    public AppResponse createComment(@Valid @RequestBody PostComment request) {
         return commentService.createComment(request);
     }
 

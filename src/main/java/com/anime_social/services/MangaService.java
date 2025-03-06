@@ -4,15 +4,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.management.RuntimeErrorException;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import com.anime_social.dto.request.PostManga;
 import com.anime_social.dto.request.UpdateManga;
 import com.anime_social.dto.response.AppResponse;
+import com.anime_social.exception.CusRunTimeException;
+import com.anime_social.exception.ErrorCode;
 import com.anime_social.models.Category;
 import com.anime_social.models.CategoryManga;
 import com.anime_social.models.Manga;
@@ -36,7 +35,7 @@ public class MangaService {
 
     public AppResponse createManga(PostManga request) {
         User author = userRepository.findById(request.getAuthorId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new CusRunTimeException(ErrorCode.USER_NOT_FOUND));
         List<Category> categories = categoryRepository.findAllById(request.getCategoryIds());
 
         Manga manga = new Manga();
@@ -66,7 +65,8 @@ public class MangaService {
     }
 
     public AppResponse updateManga(String id, UpdateManga request) {
-        Manga manga = mangaRepository.findById(id).orElseThrow(() -> new RuntimeException("Manga not found"));
+        Manga manga = mangaRepository.findById(id)
+                .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
 
         request.getName().ifPresent(manga::setName);
         request.getSlug().ifPresent(manga::setSlug);
@@ -96,10 +96,7 @@ public class MangaService {
         Manga manga = mangaRepository.findBySlug(slug);
 
         if (manga == null) {
-            return AppResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message("Manga not found")
-                    .build();
+            throw new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND);
         } else {
             return AppResponse.builder()
                     .status(HttpStatus.OK)

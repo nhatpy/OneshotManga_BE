@@ -36,10 +36,7 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isEmpty()) {
-            return AppResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message("Not found user")
-                    .build();
+            throw new CusRunTimeException(ErrorCode.USER_NOT_FOUND);
         } else {
             return AppResponse.builder()
                     .status(HttpStatus.OK)
@@ -53,10 +50,7 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isEmpty()) {
-            return AppResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message("Not found user")
-                    .build();
+            throw new CusRunTimeException(ErrorCode.USER_NOT_FOUND);
         } else {
             User userUpdate = user.get();
 
@@ -79,10 +73,7 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isEmpty()) {
-            return AppResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message("User not found")
-                    .build();
+            throw new CusRunTimeException(ErrorCode.USER_NOT_FOUND);
         } else {
             userRepository.deleteById(id);
 
@@ -114,10 +105,7 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
 
         if (user.isEmpty()) {
-            return AppResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message("User not found")
-                    .build();
+            throw new CusRunTimeException(ErrorCode.USER_NOT_FOUND);
         } else {
             User userUpdate = user.get();
             if (userUpdate.getIsWarning()) {
