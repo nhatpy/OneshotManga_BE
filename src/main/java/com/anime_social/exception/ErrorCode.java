@@ -14,6 +14,13 @@ public enum ErrorCode {
     INVALID_TOKEN("Token is invalid", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED("Unauthorized", HttpStatus.UNAUTHORIZED),
     INVALID_VERIFY_CODE("Invalid verify code", HttpStatus.BAD_REQUEST),
+    CATEGORY_ALREADY_EXISTS("Category already exists", HttpStatus.BAD_REQUEST),
+    CATEGORY_NOT_FOUND("Category not found", HttpStatus.NOT_FOUND),
+    MANGA_NOT_FOUND("Manga not found", HttpStatus.NOT_FOUND),
+    CHAPTER_NOT_FOUND("Chapter not found", HttpStatus.NOT_FOUND),
+    USER_NOT_FOUND("User not found", HttpStatus.NOT_FOUND),
+    COMMENT_NOT_FOUND("Comment not found", HttpStatus.NOT_FOUND),
+    PAYMENT_BILL_NOT_FOUND("Payment bill not found", HttpStatus.NOT_FOUND),
     ;
 
     String message;

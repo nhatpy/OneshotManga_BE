@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RestController
 @RequestMapping("/user")
-@RestControllerAdvice
 @Slf4j
 public class UserController {
     UserService userService;

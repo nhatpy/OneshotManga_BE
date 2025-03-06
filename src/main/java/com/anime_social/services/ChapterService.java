@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import com.anime_social.dto.request.CreateChapter;
 import com.anime_social.dto.request.UpdateChapter;
 import com.anime_social.dto.response.AppResponse;
+import com.anime_social.exception.CusRunTimeException;
+import com.anime_social.exception.ErrorCode;
 import com.anime_social.models.Chapter;
 import com.anime_social.models.Manga;
 import com.anime_social.repositorys.ChapterRepository;
@@ -22,10 +24,7 @@ public class ChapterService {
     public AppResponse createChapter(CreateChapter createChapterRequest) {
         Manga manga = mangaRepository.findById(createChapterRequest.getMangaId()).orElse(null);
         if (manga == null) {
-            return AppResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message("Manga not found")
-                    .build();
+            throw new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND);
         }
 
         Chapter chapter = Chapter.builder()
@@ -43,10 +42,7 @@ public class ChapterService {
     public AppResponse updateChapter(String id, UpdateChapter updateChapterRequest) {
         Chapter chapter = chapterRepository.findById(id).orElse(null);
         if (chapter == null) {
-            return AppResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message("Chapter not found")
-                    .build();
+            throw new CusRunTimeException(ErrorCode.CHAPTER_NOT_FOUND);
         }
         updateChapterRequest.getChapterNumber().ifPresent(chapter::setChapterNumber);
         updateChapterRequest.getContent().ifPresent(chapter::setContent);
@@ -60,10 +56,7 @@ public class ChapterService {
     public AppResponse deleteChapter(String id) {
         Chapter chapter = chapterRepository.findById(id).orElse(null);
         if (chapter == null) {
-            return AppResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message("Chapter not found")
-                    .build();
+            throw new CusRunTimeException(ErrorCode.CHAPTER_NOT_FOUND);
         }
 
         chapterRepository.delete(chapter);
@@ -76,10 +69,7 @@ public class ChapterService {
     public AppResponse getChapterByNumber(Integer chapterNumber) {
         Chapter chapter = chapterRepository.findByChapterNumber(chapterNumber);
         if (chapter == null) {
-            return AppResponse.builder()
-                    .status(HttpStatus.NOT_FOUND)
-                    .message("Chapter not found")
-                    .build();
+            throw new CusRunTimeException(ErrorCode.CHAPTER_NOT_FOUND);
         }
 
         return AppResponse.builder()

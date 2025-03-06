@@ -22,7 +22,6 @@ import java.text.ParseException;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RestController
 @RequestMapping("/auth")
-@RestControllerAdvice
 public class AuthenticationController {
     AuthenticationService authenticationService;
 

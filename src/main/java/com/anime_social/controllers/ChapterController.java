@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.anime_social.dto.request.CreateChapter;
 import com.anime_social.dto.request.UpdateChapter;
@@ -22,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/chapter")
 @RequiredArgsConstructor
-@RestControllerAdvice
 public class ChapterController {
     private final ChapterService chapterService;
 

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import com.anime_social.dto.request.PostComment;
 import com.anime_social.dto.request.UpdateComment;
 import com.anime_social.dto.response.AppResponse;
+import com.anime_social.exception.CusRunTimeException;
+import com.anime_social.exception.ErrorCode;
 import com.anime_social.models.Chapter;
 import com.anime_social.models.Comment;
 import com.anime_social.models.User;
@@ -18,51 +20,51 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
-    private final CommentRepository commentRepository;
-    private final ChapterRepository chapterRepository;
-    private final UserRepository userRepository;
+        private final CommentRepository commentRepository;
+        private final ChapterRepository chapterRepository;
+        private final UserRepository userRepository;
 
-    public AppResponse createComment(PostComment request) {
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        Chapter chapter = chapterRepository.findById(request.getChapterId())
-                .orElseThrow(() -> new RuntimeException("Chapter not found"));
+        public AppResponse createComment(PostComment request) {
+                User user = userRepository.findById(request.getUserId())
+                                .orElseThrow(() -> new CusRunTimeException(ErrorCode.USER_NOT_FOUND));
+                Chapter chapter = chapterRepository.findById(request.getChapterId())
+                                .orElseThrow(() -> new CusRunTimeException(ErrorCode.CHAPTER_NOT_FOUND));
 
-        Comment comment = Comment.builder()
-                .content(request.getContent())
-                .user(user)
-                .chapter(chapter)
-                .build();
+                Comment comment = Comment.builder()
+                                .content(request.getContent())
+                                .user(user)
+                                .chapter(chapter)
+                                .build();
 
-        return AppResponse.builder()
-                .status(HttpStatus.OK)
-                .message("Comment created successfully")
-                .data(commentRepository.save(comment))
-                .build();
-    }
+                return AppResponse.builder()
+                                .status(HttpStatus.OK)
+                                .message("Comment created successfully")
+                                .data(commentRepository.save(comment))
+                                .build();
+        }
 
-    public AppResponse deleteComment(String id) {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
+        public AppResponse deleteComment(String id) {
+                Comment comment = commentRepository.findById(id)
+                                .orElseThrow(() -> new CusRunTimeException(ErrorCode.COMMENT_NOT_FOUND));
 
-        commentRepository.delete(comment);
+                commentRepository.delete(comment);
 
-        return AppResponse.builder()
-                .status(HttpStatus.OK)
-                .message("Comment deleted successfully")
-                .build();
-    }
+                return AppResponse.builder()
+                                .status(HttpStatus.OK)
+                                .message("Comment deleted successfully")
+                                .build();
+        }
 
-    public AppResponse updateComment(String id, UpdateComment request) {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
+        public AppResponse updateComment(String id, UpdateComment request) {
+                Comment comment = commentRepository.findById(id)
+                                .orElseThrow(() -> new CusRunTimeException(ErrorCode.COMMENT_NOT_FOUND));
 
-        request.getContent().ifPresent(comment::setContent);
+                request.getContent().ifPresent(comment::setContent);
 
-        return AppResponse.builder()
-                .status(HttpStatus.OK)
-                .message("Comment updated successfully")
-                .data(commentRepository.save(comment))
-                .build();
-    }
+                return AppResponse.builder()
+                                .status(HttpStatus.OK)
+                                .message("Comment updated successfully")
+                                .data(commentRepository.save(comment))
+                                .build();
+        }
 }
