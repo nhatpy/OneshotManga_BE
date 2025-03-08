@@ -28,9 +28,8 @@ public class EmailService {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-
         helper.addTo(to);
-        helper.setSubject("Anime Social - Verify your account");
+        helper.setSubject("Anime Social - Xác nhận tài khoản");
         helper.setText(emailContent, true);
 
         javaMailSender.send(message);

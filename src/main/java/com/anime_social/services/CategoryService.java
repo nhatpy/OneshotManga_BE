@@ -27,7 +27,7 @@ public class CategoryService {
         List<Category> categories = categoryRepository.findAll();
         return AppResponse.builder()
                 .status(HttpStatus.OK)
-                .message("Get all categories successfully")
+                .message("Lấy danh sách thể loại thành công")
                 .data(categories)
                 .build();
     }
@@ -47,7 +47,7 @@ public class CategoryService {
         categoryRepository.save(newCategory);
         return AppResponse.builder()
                 .status(HttpStatus.CREATED)
-                .message("Create category successfully")
+                .message("Tạo thể loại thành công")
                 .data(newCategory)
                 .build();
     }
@@ -65,7 +65,7 @@ public class CategoryService {
 
         return AppResponse.builder()
                 .status(HttpStatus.OK)
-                .message("Update category successfully")
+                .message("Cập nhật thể loại thành công")
                 .data(category)
                 .build();
     }
@@ -80,7 +80,7 @@ public class CategoryService {
 
         return AppResponse.builder()
                 .status(HttpStatus.OK)
-                .message("Delete category successfully")
+                .message("Xóa thể loại thành công")
                 .data(category)
                 .build();
     }

@@ -38,7 +38,7 @@ public class CommentService {
 
                 return AppResponse.builder()
                                 .status(HttpStatus.OK)
-                                .message("Comment created successfully")
+                                .message("Bạn đã để lại một bình luận")
                                 .data(commentRepository.save(comment))
                                 .build();
         }
@@ -51,7 +51,7 @@ public class CommentService {
 
                 return AppResponse.builder()
                                 .status(HttpStatus.OK)
-                                .message("Comment deleted successfully")
+                                .message("Đã xóa bình luận")
                                 .build();
         }
 
@@ -63,7 +63,7 @@ public class CommentService {
 
                 return AppResponse.builder()
                                 .status(HttpStatus.OK)
-                                .message("Comment updated successfully")
+                                .message("Đã cập nhật bình luận")
                                 .data(commentRepository.save(comment))
                                 .build();
         }

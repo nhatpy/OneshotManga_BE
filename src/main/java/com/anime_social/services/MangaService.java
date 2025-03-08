@@ -60,7 +60,7 @@ public class MangaService {
         return AppResponse.builder()
                 .data(mangaSaved)
                 .status(HttpStatus.CREATED)
-                .message("create manga successfully")
+                .message("Tạo manga thành công")
                 .build();
     }
 
@@ -77,7 +77,7 @@ public class MangaService {
         return AppResponse.builder()
                 .data(mangaRepository.save(manga))
                 .status(HttpStatus.OK)
-                .message("update manga successfully")
+                .message("Cập nhật manga thành công")
                 .build();
     }
 
@@ -87,7 +87,7 @@ public class MangaService {
         manga.ifPresent(m -> mangaRepository.delete(m));
 
         return AppResponse.builder()
-                .message("delete manga successfully")
+                .message("Xóa manga thành công")
                 .status(HttpStatus.OK)
                 .build();
     }
@@ -111,7 +111,7 @@ public class MangaService {
 
         return AppResponse.builder()
                 .status(HttpStatus.OK)
-                .message("active all Manga selected successfully")
+                .message("Đã kích hoạt các manga được chọn")
                 .build();
     }
 }
