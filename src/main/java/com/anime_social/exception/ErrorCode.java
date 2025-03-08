@@ -22,6 +22,8 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND("Bình luận không tồn tại", HttpStatus.NOT_FOUND),
     PAYMENT_BILL_NOT_FOUND("Hóa đơn không tồn tại", HttpStatus.NOT_FOUND),
     FOLLOW_MANGA_LIST_NOT_FOUND("Danh sách theo dõi không tồn tại", HttpStatus.NOT_FOUND),
+    HISTORY_EXITS("Lịch sử đã tồn tại", HttpStatus.BAD_REQUEST),
+    HISTORY_NOT_FOUND("Lịch sử không tồn tại", HttpStatus.NOT_FOUND),
     ;
 
     String message;

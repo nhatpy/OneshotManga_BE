@@ -1,6 +1,7 @@
 package com.anime_social.models;
 
-import com.anime_social.util.enums.Status;
+import com.anime_social.enums.Status;
+
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;

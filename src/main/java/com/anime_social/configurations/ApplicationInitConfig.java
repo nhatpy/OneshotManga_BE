@@ -1,8 +1,9 @@
 package com.anime_social.configurations;
 
+import com.anime_social.enums.Role;
 import com.anime_social.models.User;
 import com.anime_social.repositorys.UserRepository;
-import com.anime_social.util.enums.Role;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,6 +21,7 @@ import java.util.HashSet;
 @Slf4j
 public class ApplicationInitConfig {
     PasswordEncoder passwordEncoder;
+
     @Bean
     ApplicationRunner applicationRunner(UserRepository userRepository) {
         return args -> {

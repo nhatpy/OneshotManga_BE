@@ -1,4 +1,4 @@
-package com.anime_social.util.enums;
+package com.anime_social.enums;
 
 public enum Role {
     USER,
