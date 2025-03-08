@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import com.anime_social.dto.request.AddToFollowListRequest;
 import com.anime_social.dto.response.AppResponse;
 import com.anime_social.exception.CusRunTimeException;
 import com.anime_social.exception.ErrorCode;
@@ -25,56 +24,56 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class FollowMangaService {
-    private final FollowMangaListMangaRepository followMangaListMangaRepository;
-    private final FollowMangaListRepository followMangaListRepository;
-    private final MangaRepository mangaRepository;
-    private final UserRepository userRepository;
+        private final FollowMangaListMangaRepository followMangaListMangaRepository;
+        private final FollowMangaListRepository followMangaListRepository;
+        private final MangaRepository mangaRepository;
+        private final UserRepository userRepository;
 
-    public AppResponse addToFollowList(AddToFollowListRequest request) {
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new CusRunTimeException(ErrorCode.USER_NOT_FOUND));
-        Manga manga = mangaRepository.findById(request.getMangaId())
-                .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
+        public AppResponse addToFollowList(String mangaId, String userId) {
+                User user = userRepository.findById(userId)
+                                .orElseThrow(() -> new CusRunTimeException(ErrorCode.USER_NOT_FOUND));
+                Manga manga = mangaRepository.findById(mangaId)
+                                .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
 
-        Optional<FollowMangaList> followMangaList = followMangaListRepository.findById(request.getUserId());
+                Optional<FollowMangaList> followMangaList = followMangaListRepository.findById(userId);
 
-        if (!followMangaList.isPresent()) {
-            FollowMangaList newFollowMangaList = FollowMangaList.builder()
-                    .user(user)
-                    .build();
+                if (!followMangaList.isPresent()) {
+                        FollowMangaList newFollowMangaList = FollowMangaList.builder()
+                                        .user(user)
+                                        .build();
 
-            FollowMangaList saveList = followMangaListRepository.save(newFollowMangaList);
+                        FollowMangaList saveList = followMangaListRepository.save(newFollowMangaList);
 
-            followMangaListMangaRepository.save(FollowMangaListManga.builder()
-                    .followMangaList(saveList)
-                    .manga(manga)
-                    .build());
-        }
-        followMangaListMangaRepository.save(FollowMangaListManga.builder()
-                .followMangaList(followMangaList.get())
-                .manga(manga)
-                .build());
+                        followMangaListMangaRepository.save(FollowMangaListManga.builder()
+                                        .followMangaList(saveList)
+                                        .manga(manga)
+                                        .build());
+                }
+                followMangaListMangaRepository.save(FollowMangaListManga.builder()
+                                .followMangaList(followMangaList.get())
+                                .manga(manga)
+                                .build());
 
-        return AppResponse.builder()
-                .status(HttpStatus.OK)
-                .message("Thêm vào danh sách theo dõi thành công")
-                .build();
-    }
-
-    public AppResponse deleteFromFollowList(AddToFollowListRequest request) {
-        Optional<FollowMangaListManga> followMangaListManga = followMangaListMangaRepository
-                .findByFollowMangaListIdAndMangaId(request.getUserId(), request.getMangaId());
-
-        if (!followMangaListManga.isPresent()) {
-            throw new CusRunTimeException(ErrorCode.FOLLOW_MANGA_LIST_NOT_FOUND);
+                return AppResponse.builder()
+                                .status(HttpStatus.OK)
+                                .message("Thêm vào danh sách theo dõi thành công")
+                                .build();
         }
 
-        followMangaListMangaRepository.delete(followMangaListManga.get());
+        public AppResponse deleteFromFollowList(String mangaId, String userId) {
+                Optional<FollowMangaListManga> followMangaListManga = followMangaListMangaRepository
+                                .findByFollowMangaListIdAndMangaId(userId, mangaId);
 
-        return AppResponse.builder()
-                .status(HttpStatus.OK)
-                .message("Xóa khỏi danh sách theo dõi thành công")
-                .build();
-    }
+                if (!followMangaListManga.isPresent()) {
+                        throw new CusRunTimeException(ErrorCode.FOLLOW_MANGA_LIST_NOT_FOUND);
+                }
+
+                followMangaListMangaRepository.delete(followMangaListManga.get());
+
+                return AppResponse.builder()
+                                .status(HttpStatus.OK)
+                                .message("Xóa khỏi danh sách theo dõi thành công")
+                                .build();
+        }
 
 }

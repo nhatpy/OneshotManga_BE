@@ -1,31 +1,33 @@
 package com.anime_social.controllers;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.anime_social.dto.request.AddToFollowListRequest;
 import com.anime_social.dto.response.AppResponse;
 import com.anime_social.services.FollowMangaService;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/follow")
+@RequestMapping("/follow/{userId}")
 public class FollowMangaController {
     private final FollowMangaService followMangaService;
 
-    @PostMapping("/")
-    public AppResponse addToFollowList(@RequestBody @Valid AddToFollowListRequest request) {
-        return followMangaService.addToFollowList(request);
+    @PostMapping("/{mangaId}")
+    public AppResponse addToFollowList(
+            @PathVariable String mangaId,
+            @PathVariable String userId) {
+        return followMangaService.addToFollowList(mangaId, userId);
     }
 
-    @DeleteMapping("/delete")
-    public AppResponse deleteFromFollowList(@RequestBody @Valid AddToFollowListRequest request) {
-        return followMangaService.deleteFromFollowList(request);
+    @DeleteMapping("/delete/{mangaId}")
+    public AppResponse deleteFromFollowList(
+            @PathVariable String mangaId,
+            @PathVariable String userId) {
+        return followMangaService.deleteFromFollowList(mangaId, userId);
     }
 }
