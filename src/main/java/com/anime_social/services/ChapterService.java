@@ -62,7 +62,7 @@ public class ChapterService {
         chapterRepository.delete(chapter);
         return AppResponse.builder()
                 .status(HttpStatus.OK)
-                .message("Chapter deleted")
+                .message("Xóa chapter thành công")
                 .build();
     }
 

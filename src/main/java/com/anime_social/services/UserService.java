@@ -27,7 +27,7 @@ public class UserService {
 
         return AppResponse.builder()
                 .status(HttpStatus.OK)
-                .message("Get all users successfully")
+                .message("Lấy danh sách người dùng thành công")
                 .data(users)
                 .build();
     }
@@ -40,7 +40,7 @@ public class UserService {
         } else {
             return AppResponse.builder()
                     .status(HttpStatus.OK)
-                    .message("Get user successfully")
+                    .message("Lấy thông tin người dùng thành công")
                     .data(user.get())
                     .build();
         }
@@ -63,7 +63,7 @@ public class UserService {
 
             return AppResponse.builder()
                     .status(HttpStatus.OK)
-                    .message("Update user successfully")
+                    .message("Cập nhật thông tin người dùng thành công")
                     .data(userUpdate)
                     .build();
         }
@@ -79,7 +79,7 @@ public class UserService {
 
             return AppResponse.builder()
                     .status(HttpStatus.OK)
-                    .message("Delete user successfully")
+                    .message("Xóa người dùng thành công")
                     .build();
         }
     }
@@ -96,7 +96,7 @@ public class UserService {
 
         return AppResponse.builder()
                 .status(HttpStatus.OK)
-                .message("Get current user successfully")
+                .message("Lấy thông tin người dùng hiện tại thành công")
                 .data(currentUser)
                 .build();
     }
@@ -115,7 +115,7 @@ public class UserService {
 
                 return AppResponse.builder()
                         .status(HttpStatus.OK)
-                        .message("Banned user")
+                        .message("Đã khoá tài khoản người dùng")
                         .data(userUpdate)
                         .build();
             }
@@ -125,7 +125,7 @@ public class UserService {
 
             return AppResponse.builder()
                     .status(HttpStatus.OK)
-                    .message("Warning user successfully")
+                    .message("Cảnh báo người dùng thành công")
                     .data(userUpdate)
                     .build();
         }

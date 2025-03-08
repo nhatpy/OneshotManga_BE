@@ -13,14 +13,13 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "follow_manga_list")
-public class FollowMangaList extends BaseEntity{
+public class FollowMangaList extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", updatable = false, nullable = false)
+    @Column(name = "id")
     String id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @MapsId
     User user;
 
     @OneToMany(mappedBy = "followMangaList", fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -78,7 +78,7 @@ public class AuthenticationService {
 
         return AppResponse.builder()
                 .status(HttpStatus.OK)
-                .message("Register successfully")
+                .message("Đăng ký thành công")
                 .data(result)
                 .build();
     }
@@ -92,7 +92,7 @@ public class AuthenticationService {
         if (user.getIsBanned()) {
             return AppResponse.builder()
                     .status(HttpStatus.FORBIDDEN)
-                    .message("User is banned")
+                    .message("Tài khoản của bạn đã bị khóa")
                     .build();
         }
 
@@ -114,7 +114,7 @@ public class AuthenticationService {
 
         return AppResponse.builder()
                 .status(HttpStatus.OK)
-                .message("Login successfully")
+                .message("Đăng nhập thành công")
                 .data(authenticateResponse)
                 .build();
     }
@@ -127,7 +127,7 @@ public class AuthenticationService {
             throw new CusRunTimeException(ErrorCode.INVALID_TOKEN);
         }
         return AppResponse.builder()
-                .message("Valid token")
+                .message("Token hợp lệ")
                 .status(HttpStatus.OK)
                 .build();
     }
@@ -141,7 +141,7 @@ public class AuthenticationService {
 
         return AppResponse.builder()
                 .status(HttpStatus.OK)
-                .message("Logout successfully")
+                .message("Đăng xuất thành công")
                 .build();
     }
 
@@ -163,7 +163,7 @@ public class AuthenticationService {
             JWSSigner signer = new MACSigner(jwtSecret.getBytes(StandardCharsets.UTF_8));
             signedJWT.sign(signer);
         } catch (JOSEException e) {
-            throw new RuntimeException("Error signing the token", e);
+            throw new RuntimeException("Không thể tạo token", e);
         }
 
         return signedJWT.serialize();
