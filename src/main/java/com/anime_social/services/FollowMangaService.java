@@ -64,7 +64,7 @@ public class FollowMangaService {
                 Optional<FollowMangaListManga> followMangaListManga = followMangaListMangaRepository
                                 .findByFollowMangaListIdAndMangaId(userId, mangaId);
 
-                if (!followMangaListManga.isPresent()) {
+                if (followMangaListManga.isEmpty()) {
                         throw new CusRunTimeException(ErrorCode.FOLLOW_MANGA_LIST_NOT_FOUND);
                 }
 

@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     UserService userService;
 
-    @GetMapping("/get-all")
-    public AppResponse getUsers() {
-        return userService.getUsers();
+    @GetMapping("/get-paging")
+    public AppResponse getUsersPaging(@RequestParam int page, @RequestParam int size) {
+        return userService.getUsersPaging(page, size);
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")

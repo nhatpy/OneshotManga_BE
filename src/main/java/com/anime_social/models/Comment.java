@@ -20,11 +20,11 @@ public class Comment extends BaseEntity {
     @Column(name = "content")
     String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "chapter_id", nullable = false)
     Chapter chapter;
 }

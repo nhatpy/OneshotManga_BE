@@ -3,6 +3,7 @@ package com.anime_social.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -82,6 +83,20 @@ public class CategoryService {
                 .status(HttpStatus.OK)
                 .message("Xóa thể loại thành công")
                 .data(category)
+                .build();
+    }
+
+    public AppResponse getPaging(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        List<Category> categories = categoryRepository.findAll(pageRequest).toList();
+
+        Integer total = categoryRepository.getNumberOfAll();
+
+        return AppResponse.builder()
+                .data(categories)
+                .totalItem(total)
+                .message("Lấy danh sách thể loại phân trang thành công")
+                .status(HttpStatus.OK)
                 .build();
     }
 }

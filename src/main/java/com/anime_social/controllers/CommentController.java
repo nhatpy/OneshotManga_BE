@@ -37,7 +37,7 @@ public class CommentController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PatchMapping("/create/{id}")
+    @PatchMapping("/update/{id}")
     public AppResponse updateComment(@PathVariable String id, @RequestBody UpdateComment request) {
         return commentService.updateComment(id, request);
     }

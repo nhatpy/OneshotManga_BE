@@ -31,16 +31,17 @@ public class ChapterController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PatchMapping("/update/{id}")
-    public AppResponse updateChapter(@PathVariable String id,
+    @PatchMapping("/update/{chapterNumber}")
+    public AppResponse updateChapter(
+            @PathVariable Integer chapterNumber,
             @RequestBody UpdateChapter updateChapterRequest) {
-        return chapterService.updateChapter(id, updateChapterRequest);
+        return chapterService.updateChapter(chapterNumber, updateChapterRequest);
     }
 
     @PreAuthorize("hasRole('USER')")
-    @DeleteMapping("/delete/{id}")
-    public AppResponse deleteChapter(@PathVariable String id) {
-        return chapterService.deleteChapter(id);
+    @DeleteMapping("/delete/{chapterNumber}")
+    public AppResponse deleteChapter(@PathVariable Integer chapterNumber) {
+        return chapterService.deleteChapter(chapterNumber);
     }
 
     @GetMapping("/get/{chapterNumber}")

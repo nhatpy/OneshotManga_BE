@@ -19,13 +19,13 @@ public class Manga extends BaseEntity {
     @Column(name = "id", updatable = false, nullable = false)
     String id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     String name;
 
-    @Column(name = "slug")
+    @Column(name = "slug", unique = true)
     String slug;
 
-    @Column(name = "description")
+    @Column(name = "description", columnDefinition = "LONGTEXT")
     String description;
 
     @Column(name = "cover_image")
@@ -46,19 +46,19 @@ public class Manga extends BaseEntity {
     @Builder.Default
     Boolean isActive = false;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "manga", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "manga", cascade = CascadeType.ALL)
     List<CategoryManga> categoryMangas;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "manga", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "manga", cascade = CascadeType.ALL)
     List<Chapter> chapters;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "manga", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "manga", cascade = CascadeType.ALL)
     List<UserReadManga> userReadMangas;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "manga", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "manga", cascade = CascadeType.ALL)
     List<FollowMangaListManga> followMangaListMangas;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     User author;
 }

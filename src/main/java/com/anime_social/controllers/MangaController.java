@@ -19,6 +19,7 @@ import com.anime_social.services.MangaService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/manga")
@@ -27,31 +28,39 @@ public class MangaController {
     private final MangaService mangaService;
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("create")
+    @PostMapping("/create")
     public AppResponse createManga(@RequestBody @Valid PostManga request) {
         return mangaService.createManga(request);
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PatchMapping("update/{id}")
-    public AppResponse updateManga(@PathVariable String id, @RequestBody UpdateManga request) {
-        return mangaService.updateManga(id, request);
+    @PatchMapping("/update/{slug}")
+    public AppResponse updateManga(@PathVariable String slug, @RequestBody UpdateManga request) {
+        return mangaService.updateManga(slug, request);
     }
 
     @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    @DeleteMapping("delete/{id}")
-    public AppResponse deleteManga(@PathVariable String id) {
-        return mangaService.deleteManga(id);
+    @DeleteMapping("/delete/{slug}")
+    public AppResponse deleteManga(@PathVariable String slug) {
+        return mangaService.deleteManga(slug);
     }
 
-    @GetMapping("get/{slug}")
+    @GetMapping("/get/{slug}")
     public AppResponse getMangaBySlug(@PathVariable String slug) {
         return mangaService.getMangaBySlug(slug);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("bulk-active")
+    @PostMapping("/bulk-active")
     public AppResponse bulkActiveManga(@RequestBody List<String> mangaIds) {
         return mangaService.bulkActiveManga(mangaIds);
+    }
+
+    @GetMapping("/get/get-paging")
+    public AppResponse getMangaPaging(
+            @RequestParam(required = true) int page,
+            @RequestParam(required = true) int size,
+            @RequestParam(required = true) int type) {
+        return mangaService.getMangaPaging(page, size, type);
     }
 }

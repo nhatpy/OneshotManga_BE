@@ -6,6 +6,7 @@ import com.anime_social.dto.request.Register;
 import com.anime_social.dto.request.Authenticate;
 import com.anime_social.dto.response.AppResponse;
 import com.anime_social.dto.response.AuthenticateResponse;
+import com.anime_social.dto.response.UserResponse;
 import com.anime_social.enums.Role;
 import com.anime_social.models.User;
 import com.anime_social.exception.ErrorCode;
@@ -56,9 +57,9 @@ public class AuthenticationService {
 
     public AppResponse register(Register registerRequest) throws MessagingException {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        User existed_user = userRepository.findByEmail(registerRequest.getEmail());
+        Optional<User> existed_user = userRepository.findByEmail(registerRequest.getEmail());
 
-        if (existed_user != null) {
+        if (existed_user.isPresent()) {
             throw new CusRunTimeException(ErrorCode.EMAIL_ALREADY_EXISTS);
         }
 
@@ -79,16 +80,15 @@ public class AuthenticationService {
         return AppResponse.builder()
                 .status(HttpStatus.OK)
                 .message("Đăng ký thành công")
-                .data(result)
+                .data(UserResponse.toUserResponse(result))
                 .build();
     }
 
     public AppResponse login(Authenticate authenticateRequest) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
-        User user = userRepository.findByEmail(authenticateRequest.getEmail());
-        if (user == null) {
-            throw new CusRunTimeException(ErrorCode.EMAIL_NOT_FOUND);
-        }
+        User user = userRepository.findByEmail(authenticateRequest.getEmail())
+                .orElseThrow(() -> new CusRunTimeException(ErrorCode.EMAIL_NOT_FOUND));
+
         if (user.getIsBanned()) {
             return AppResponse.builder()
                     .status(HttpStatus.FORBIDDEN)
@@ -109,7 +109,7 @@ public class AuthenticationService {
         AuthenticateResponse authenticateResponse = AuthenticateResponse.builder()
                 .expiredTime(jwtExpiredTime)
                 .token(token)
-                .user(user)
+                .user(UserResponse.toUserResponse(user))
                 .build();
 
         return AppResponse.builder()
@@ -197,16 +197,12 @@ public class AuthenticationService {
     }
 
     public void verifyUser(String verifyCode, HttpServletResponse response) throws IOException {
-        VerifyUserCode verifyUserCode = verifyUserCodeRepository.findByCode(verifyCode);
-        if (verifyUserCode == null) {
-            throw new CusRunTimeException(ErrorCode.INVALID_VERIFY_CODE);
-        }
+        VerifyUserCode verifyUserCode = verifyUserCodeRepository.findByCode(verifyCode)
+                .orElseThrow(() -> new CusRunTimeException(ErrorCode.INVALID_VERIFY_CODE));
 
         String userMail = verifyUserCode.getUser().getEmail();
-        User user = userRepository.findByEmail(userMail);
-        if (user == null) {
-            throw new CusRunTimeException(ErrorCode.EMAIL_NOT_FOUND);
-        }
+        User user = userRepository.findByEmail(userMail)
+                .orElseThrow(() -> new CusRunTimeException(ErrorCode.EMAIL_NOT_FOUND));
 
         user.setIsVerified(true);
         userRepository.save(user);

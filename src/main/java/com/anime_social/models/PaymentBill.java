@@ -25,7 +25,7 @@ public class PaymentBill extends BaseEntity {
     @Builder.Default
     String status = Status.PENDING.name();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 }

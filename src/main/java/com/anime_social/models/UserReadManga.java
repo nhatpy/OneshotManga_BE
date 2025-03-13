@@ -25,11 +25,11 @@ public class UserReadManga extends BaseEntity {
     @Column(name = "last_read_at_chapter")
     Integer lastReadAtChapter;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "manga_id", nullable = false)
     Manga manga;
 }

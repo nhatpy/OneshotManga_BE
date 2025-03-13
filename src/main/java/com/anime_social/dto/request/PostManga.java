@@ -31,7 +31,5 @@ public class PostManga {
 
     @NotEmpty(message = "YOU_MISSING_REQUIRED_FIELD")
     String coverImg;
-
-    @NotEmpty(message = "YOU_MISSING_REQUIRED_FIELD")
     Boolean isDone;
 }

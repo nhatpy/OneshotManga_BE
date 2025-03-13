@@ -1,12 +1,13 @@
 package com.anime_social.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Data
 @Entity
@@ -17,8 +18,9 @@ public class VerifyUserCode {
     @Column(name = "id")
     String id;
     private String code;
+
     @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @MapsId
     private User user;
 
