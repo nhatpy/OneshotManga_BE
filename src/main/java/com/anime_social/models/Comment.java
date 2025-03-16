@@ -17,14 +17,14 @@ public class Comment extends BaseEntity {
     @Column(name = "id", updatable = false, nullable = false)
     String id;
 
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "LONGTEXT")
     String content;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "chapter_id", nullable = false)
     Chapter chapter;
 }

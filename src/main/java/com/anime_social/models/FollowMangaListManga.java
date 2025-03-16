@@ -17,11 +17,11 @@ public class FollowMangaListManga {
     @Column(name = "id", updatable = false, nullable = false)
     String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "follow_manga_list_id", nullable = false)
     FollowMangaList followMangaList;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "manga_id")
     Manga manga;
 }

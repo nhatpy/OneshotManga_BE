@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.anime_social.dto.request.PostComment;
 import com.anime_social.dto.request.UpdateComment;
 import com.anime_social.dto.response.AppResponse;
+import com.anime_social.dto.response.CommentResponse;
 import com.anime_social.exception.CusRunTimeException;
 import com.anime_social.exception.ErrorCode;
 import com.anime_social.models.Chapter;
@@ -39,7 +40,7 @@ public class CommentService {
                 return AppResponse.builder()
                                 .status(HttpStatus.OK)
                                 .message("Bạn đã để lại một bình luận")
-                                .data(commentRepository.save(comment))
+                                .data(CommentResponse.toCommentResponse(commentRepository.save(comment)))
                                 .build();
         }
 
@@ -64,7 +65,7 @@ public class CommentService {
                 return AppResponse.builder()
                                 .status(HttpStatus.OK)
                                 .message("Đã cập nhật bình luận")
-                                .data(commentRepository.save(comment))
+                                .data(CommentResponse.toCommentResponse(commentRepository.save(comment)))
                                 .build();
         }
 }

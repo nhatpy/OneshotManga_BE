@@ -24,6 +24,8 @@ public enum ErrorCode {
     FOLLOW_MANGA_LIST_NOT_FOUND("Danh sách theo dõi không tồn tại", HttpStatus.NOT_FOUND),
     HISTORY_EXITS("Lịch sử đã tồn tại", HttpStatus.BAD_REQUEST),
     HISTORY_NOT_FOUND("Lịch sử không tồn tại", HttpStatus.NOT_FOUND),
+    MANGA_ALREADY_EXISTS("Truyện đã tồn tại", HttpStatus.BAD_REQUEST),
+    CHAPTER_ALREADY_EXISTS("Chapter đã tồn tại", HttpStatus.BAD_REQUEST),
     ;
 
     String message;

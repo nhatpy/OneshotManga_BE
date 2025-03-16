@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.anime_social.dto.request.CreateChapter;
 import com.anime_social.dto.request.UpdateChapter;
 import com.anime_social.dto.response.AppResponse;
+import com.anime_social.dto.response.ChapterResponse;
 import com.anime_social.exception.CusRunTimeException;
 import com.anime_social.exception.ErrorCode;
 import com.anime_social.models.Chapter;
@@ -14,67 +15,75 @@ import com.anime_social.repositorys.ChapterRepository;
 import com.anime_social.repositorys.MangaRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChapterService {
-    private final ChapterRepository chapterRepository;
-    private final MangaRepository mangaRepository;
+        private final ChapterRepository chapterRepository;
+        private final MangaRepository mangaRepository;
 
-    public AppResponse createChapter(CreateChapter createChapterRequest) {
-        Manga manga = mangaRepository.findById(createChapterRequest.getMangaId()).orElse(null);
-        if (manga == null) {
-            throw new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND);
+        public AppResponse createChapter(String mangaId, CreateChapter createChapterRequest) {
+                Manga manga = mangaRepository.findById(mangaId)
+                                .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
+
+                Chapter chapterExist = chapterRepository
+                                .findByChapterNumberAndMangaId(mangaId, createChapterRequest.getChapterNumber())
+                                .orElse(null);
+                if (chapterExist != null) {
+                        throw new CusRunTimeException(ErrorCode.CHAPTER_ALREADY_EXISTS);
+                }
+
+                Chapter chapter = Chapter.builder()
+                                .manga(manga)
+                                .content(createChapterRequest.getContent())
+                                .chapterNumber(createChapterRequest.getChapterNumber())
+                                .build();
+                Chapter savedChapter = chapterRepository.save(chapter);
+
+                return AppResponse.builder()
+                                .status(HttpStatus.CREATED)
+                                .data(ChapterResponse.toChapterResponse(savedChapter))
+                                .message("Tạo chapter thành công")
+                                .build();
         }
 
-        Chapter chapter = Chapter.builder()
-                .manga(manga)
-                .content(createChapterRequest.getContent())
-                .chapterNumber(createChapterRequest.getChapterNumber())
-                .build();
+        public AppResponse updateChapter(String mangaId, Integer chapterNumber, UpdateChapter updateChapterRequest) {
+                Chapter chapter = chapterRepository.findByChapterNumberAndMangaId(mangaId, chapterNumber)
+                                .orElseThrow(() -> new CusRunTimeException(ErrorCode.CHAPTER_NOT_FOUND));
 
-        return AppResponse.builder()
-                .status(HttpStatus.CREATED)
-                .data(chapterRepository.save(chapter))
-                .build();
-    }
+                updateChapterRequest.getChapterNumber()
+                                .ifPresent(newChapterNumber -> chapter.setChapterNumber(newChapterNumber));
+                updateChapterRequest.getContent().ifPresent(content -> chapter.setContent(content));
+                Chapter savedChapter = chapterRepository.save(chapter);
 
-    public AppResponse updateChapter(String id, UpdateChapter updateChapterRequest) {
-        Chapter chapter = chapterRepository.findById(id).orElse(null);
-        if (chapter == null) {
-            throw new CusRunTimeException(ErrorCode.CHAPTER_NOT_FOUND);
-        }
-        updateChapterRequest.getChapterNumber().ifPresent(chapter::setChapterNumber);
-        updateChapterRequest.getContent().ifPresent(chapter::setContent);
-
-        return AppResponse.builder()
-                .status(HttpStatus.OK)
-                .data(chapterRepository.save(chapter))
-                .build();
-    }
-
-    public AppResponse deleteChapter(String id) {
-        Chapter chapter = chapterRepository.findById(id).orElse(null);
-        if (chapter == null) {
-            throw new CusRunTimeException(ErrorCode.CHAPTER_NOT_FOUND);
+                return AppResponse.builder()
+                                .status(HttpStatus.OK)
+                                .data(ChapterResponse.toChapterResponse(savedChapter))
+                                .message("Cập nhật chapter thành công")
+                                .build();
         }
 
-        chapterRepository.delete(chapter);
-        return AppResponse.builder()
-                .status(HttpStatus.OK)
-                .message("Xóa chapter thành công")
-                .build();
-    }
+        public AppResponse deleteChapter(String mangaId, Integer chapterNumber) {
+                Chapter chapter = chapterRepository.findByChapterNumberAndMangaId(mangaId, chapterNumber)
+                                .orElseThrow(() -> new CusRunTimeException(ErrorCode.CHAPTER_NOT_FOUND));
 
-    public AppResponse getChapterByNumber(Integer chapterNumber) {
-        Chapter chapter = chapterRepository.findByChapterNumber(chapterNumber);
-        if (chapter == null) {
-            throw new CusRunTimeException(ErrorCode.CHAPTER_NOT_FOUND);
+                chapterRepository.delete(chapter);
+                return AppResponse.builder()
+                                .status(HttpStatus.OK)
+                                .message("Xóa chapter thành công")
+                                .build();
         }
 
-        return AppResponse.builder()
-                .status(HttpStatus.OK)
-                .data(chapter)
-                .build();
-    }
+        public AppResponse getChapterByNumber(String mangaId, Integer chapterNumber) {
+                Chapter chapter = chapterRepository.findByChapterNumberAndMangaId(mangaId, chapterNumber)
+                                .orElseThrow(() -> new CusRunTimeException(ErrorCode.CHAPTER_NOT_FOUND));
+
+                return AppResponse.builder()
+                                .status(HttpStatus.OK)
+                                .data(ChapterResponse.toChapterResponse(chapter))
+                                .message("Lấy chapter theo số tập thành công")
+                                .build();
+        }
 }

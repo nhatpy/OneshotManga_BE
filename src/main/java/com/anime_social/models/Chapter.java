@@ -29,6 +29,6 @@ public class Chapter extends BaseEntity {
     @JoinColumn(name = "manga_id", nullable = false)
     Manga manga;
 
-    @OneToMany(mappedBy = "chapter", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chapter", cascade = CascadeType.ALL)
     List<Comment> comments;
 }

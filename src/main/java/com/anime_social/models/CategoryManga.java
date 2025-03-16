@@ -17,11 +17,11 @@ public class CategoryManga {
     @Column(name = "id", updatable = false, nullable = false)
     String id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "manga_id")
     Manga manga;
 }

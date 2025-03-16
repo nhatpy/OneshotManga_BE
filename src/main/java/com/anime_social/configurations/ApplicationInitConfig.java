@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 @Configuration
 @RequiredArgsConstructor
@@ -28,6 +29,13 @@ public class ApplicationInitConfig {
             HashSet<String> roles = new HashSet<String>();
             roles.add(Role.ADMIN.name());
 
+            Optional<User> existed_user = userRepository.findByFullName("admin");
+
+            if (existed_user.isPresent()) {
+                log.info("ADMIN already exists with password is 000000");
+                return;
+            }
+
             User user = User.builder()
                     .fullName("admin")
                     .email("admin@gmail.com")
@@ -35,13 +43,9 @@ public class ApplicationInitConfig {
                     .isVerified(true)
                     .password(passwordEncoder.encode("000000"))
                     .build();
-
-            if (userRepository.findByFullName("admin") != null) {
-                log.warn("admin already exists with password is 000000");
-                return;
-            }
             userRepository.save(user);
-            log.info("admin has been created with password is 000000");
+
+            log.info("ADMIN has been created with password is 000000");
         };
     }
 }

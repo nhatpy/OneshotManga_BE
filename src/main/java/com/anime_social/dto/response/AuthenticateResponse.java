@@ -1,6 +1,5 @@
 package com.anime_social.dto.response;
 
-import com.anime_social.models.User;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,5 +11,5 @@ import lombok.experimental.FieldDefaults;
 public class AuthenticateResponse {
     String token;
     long expiredTime;
-    User user;
+    UserResponse user;
 }

@@ -18,10 +18,10 @@ public class FollowMangaList extends BaseEntity {
     @Column(name = "id")
     String id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @MapsId
     User user;
 
-    @OneToMany(mappedBy = "followMangaList", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "followMangaList", cascade = CascadeType.ALL)
     List<FollowMangaListManga> followMangaListMangas;
 }

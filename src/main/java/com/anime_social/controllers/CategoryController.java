@@ -1,6 +1,7 @@
 package com.anime_social.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anime_social.dto.request.CreateCategory;
@@ -48,4 +49,9 @@ public class CategoryController {
         return categoryService.deleteCategory(id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/get-paging")
+    public AppResponse getPaging(@RequestParam int page, @RequestParam int size) {
+        return categoryService.getPaging(page, size);
+    }
 }

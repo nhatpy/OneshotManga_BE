@@ -1,9 +1,11 @@
 package com.anime_social.controllers;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anime_social.dto.response.AppResponse;
@@ -29,5 +31,13 @@ public class FollowMangaController {
             @PathVariable String mangaId,
             @PathVariable String userId) {
         return followMangaService.deleteFromFollowList(mangaId, userId);
+    }
+
+    @GetMapping("/get-paging")
+    public AppResponse getFollowListPaging(
+            @PathVariable String userId,
+            @RequestParam int page,
+            @RequestParam int size) {
+        return followMangaService.getFollowListPaging(userId, page, size);
     }
 }

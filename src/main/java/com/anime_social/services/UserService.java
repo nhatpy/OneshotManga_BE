@@ -2,6 +2,7 @@ package com.anime_social.services;
 
 import com.anime_social.dto.request.UpdateUser;
 import com.anime_social.dto.response.AppResponse;
+import com.anime_social.dto.response.UserResponse;
 import com.anime_social.models.User;
 import com.anime_social.exception.CusRunTimeException;
 import com.anime_social.exception.ErrorCode;
@@ -9,6 +10,10 @@ import com.anime_social.repositorys.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,18 +24,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Service
+@Slf4j
 public class UserService {
     UserRepository userRepository;
-
-    public AppResponse getUsers() {
-        List<User> users = userRepository.findAll();
-
-        return AppResponse.builder()
-                .status(HttpStatus.OK)
-                .message("Lấy danh sách người dùng thành công")
-                .data(users)
-                .build();
-    }
 
     public AppResponse getUserById(String id) {
         Optional<User> user = userRepository.findById(id);
@@ -41,7 +37,7 @@ public class UserService {
             return AppResponse.builder()
                     .status(HttpStatus.OK)
                     .message("Lấy thông tin người dùng thành công")
-                    .data(user.get())
+                    .data(UserResponse.toUserResponse(user.get()))
                     .build();
         }
     }
@@ -64,7 +60,7 @@ public class UserService {
             return AppResponse.builder()
                     .status(HttpStatus.OK)
                     .message("Cập nhật thông tin người dùng thành công")
-                    .data(userUpdate)
+                    .data(UserResponse.toUserResponse(userUpdate))
                     .build();
         }
     }
@@ -88,16 +84,13 @@ public class UserService {
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();
 
-        User currentUser = userRepository.findByEmail(email);
-
-        if (currentUser == null) {
-            throw new CusRunTimeException(ErrorCode.EMAIL_NOT_FOUND);
-        }
+        User currentUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new CusRunTimeException(ErrorCode.EMAIL_NOT_FOUND));
 
         return AppResponse.builder()
                 .status(HttpStatus.OK)
                 .message("Lấy thông tin người dùng hiện tại thành công")
-                .data(currentUser)
+                .data(UserResponse.toUserResponse(currentUser))
                 .build();
     }
 
@@ -116,7 +109,7 @@ public class UserService {
                 return AppResponse.builder()
                         .status(HttpStatus.OK)
                         .message("Đã khoá tài khoản người dùng")
-                        .data(userUpdate)
+                        .data(UserResponse.toUserResponse(userUpdate))
                         .build();
             }
             userUpdate.setIsWarning(true);
@@ -126,8 +119,26 @@ public class UserService {
             return AppResponse.builder()
                     .status(HttpStatus.OK)
                     .message("Cảnh báo người dùng thành công")
-                    .data(userUpdate)
+                    .data(UserResponse.toUserResponse(userUpdate))
                     .build();
         }
+    }
+
+    public AppResponse getUsersPaging(int page, int size) {
+        int starterPage = page - 1;
+        Pageable pageable = PageRequest.of(starterPage, size);
+        List<User> users = userRepository.findAllUserVerified(pageable);
+
+        List<UserResponse> userResponses = users.stream()
+                .map(user -> UserResponse.toUserResponse(user))
+                .toList();
+        Integer count = userRepository.getNumberOfUserVerified().orElse(0);
+
+        return AppResponse.builder()
+                .status(HttpStatus.OK)
+                .message("Lấy danh sách người dùng theo trang thành công")
+                .data(userResponses)
+                .totalItem(count)
+                .build();
     }
 }

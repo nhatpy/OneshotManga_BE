@@ -6,6 +6,7 @@ import com.anime_social.services.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -32,8 +33,9 @@ public class CustomJwtDecoder implements JwtDecoder {
                     .token(token)
                     .build());
 
-            if (!"Valid token".equals(response.getMessage()))
+            if (!HttpStatus.OK.equals(response.getStatus())) {
                 throw new JwtException("Token invalid");
+            }
         } catch (JOSEException | ParseException e) {
             throw new JwtException(e.getMessage());
         }
