@@ -1,11 +1,11 @@
 package com.anime_social.dto.response;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.anime_social.models.CategoryManga;
 import com.anime_social.models.Manga;
 
 import lombok.AllArgsConstructor;
@@ -31,7 +31,9 @@ public class MangaResponse {
         Boolean isActive;
         String authorName;
         List<String> categoriesName;
-        List<ChapterResponse> chapters;
+        List<SimpleChapterResponse> chapters;
+        Date createAt;
+        Date updateAt;
 
         public static MangaResponse toMangaResponse(Manga manga) {
                 List<String> categoriesName = Optional.ofNullable(manga.getCategoryMangas())
@@ -39,10 +41,10 @@ public class MangaResponse {
                                 .stream()
                                 .map(categoryManga -> categoryManga.getCategory().getName())
                                 .collect(Collectors.toList());
-                List<ChapterResponse> chapters = Optional.ofNullable(manga.getChapters())
+                List<SimpleChapterResponse> chapters = Optional.ofNullable(manga.getChapters())
                                 .orElse(Collections.emptyList())
                                 .stream()
-                                .map(ChapterResponse::toChapterResponse)
+                                .map(SimpleChapterResponse::toSimpleChapterResponse)
                                 .collect(Collectors.toList());
 
                 return MangaResponse.builder()
@@ -58,6 +60,8 @@ public class MangaResponse {
                                 .authorName(manga.getAuthor().getFullName())
                                 .categoriesName(categoriesName)
                                 .chapters(chapters)
+                                .createAt(manga.getCreateAt())
+                                .updateAt(manga.getUpdateAt())
                                 .build();
         }
 }

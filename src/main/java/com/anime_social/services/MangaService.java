@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import com.anime_social.dto.request.BulkActiveRequest;
 import com.anime_social.dto.request.PostManga;
 import com.anime_social.dto.request.UpdateManga;
 import com.anime_social.dto.response.AppResponse;
@@ -111,9 +114,15 @@ public class MangaService {
                                 .build();
         }
 
-        public AppResponse bulkActiveManga(List<String> mangaIds) {
+        public AppResponse bulkActiveManga(BulkActiveRequest bulkActiveRequest) {
+                List<String> mangaIds = bulkActiveRequest.getMangaIds();
+
                 List<Manga> mangas = mangaRepository.findAllById(mangaIds);
-                mangas.forEach(manga -> manga.setIsActive(true));
+
+                mangas.forEach(manga -> {
+                        manga.setIsActive(true);
+                        mangaRepository.save(manga);
+                });
 
                 return AppResponse.builder()
                                 .status(HttpStatus.OK)
@@ -122,7 +131,8 @@ public class MangaService {
         }
 
         public AppResponse getMangaPaging(int page, int size, int type) {
-                PageRequest request = PageRequest.of(page, size);
+                int staterPage = page - 1;
+                Pageable request = PageRequest.of(staterPage, size);
 
                 if (type == 1) {
                         List<Manga> mangas = mangaRepository.findAllPagingWithActive(request);
@@ -130,7 +140,7 @@ public class MangaService {
                                         .map(MangaResponse::toMangaResponse)
                                         .toList();
 
-                        Integer total = mangaRepository.getNumberOfAllActive();
+                        Integer total = mangaRepository.getNumberOfAllActive().orElse(0);
 
                         return AppResponse.builder()
                                         .status(HttpStatus.OK)
@@ -144,7 +154,7 @@ public class MangaService {
                                 .map(MangaResponse::toMangaResponse)
                                 .toList();
 
-                Integer total = mangaRepository.getNumberOfAll();
+                Integer total = mangaRepository.getNumberOfAll().orElse(0);
 
                 return AppResponse.builder()
                                 .status(HttpStatus.OK)

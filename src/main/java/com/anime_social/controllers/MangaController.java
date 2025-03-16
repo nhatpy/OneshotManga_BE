@@ -1,7 +1,5 @@
 package com.anime_social.controllers;
 
-import java.util.List;
-
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.anime_social.dto.request.BulkActiveRequest;
 import com.anime_social.dto.request.PostManga;
 import com.anime_social.dto.request.UpdateManga;
 import com.anime_social.dto.response.AppResponse;
@@ -52,8 +51,8 @@ public class MangaController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/bulk-active")
-    public AppResponse bulkActiveManga(@RequestBody List<String> mangaIds) {
-        return mangaService.bulkActiveManga(mangaIds);
+    public AppResponse bulkActiveManga(@RequestBody BulkActiveRequest bulkActiveRequest) {
+        return mangaService.bulkActiveManga(bulkActiveRequest);
     }
 
     @GetMapping("/get/get-paging")

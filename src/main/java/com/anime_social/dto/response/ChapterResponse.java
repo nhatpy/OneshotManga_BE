@@ -1,6 +1,7 @@
 package com.anime_social.dto.response;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -22,8 +23,10 @@ public class ChapterResponse {
     String id;
     Integer chapterNumber;
     List<String> content;
-    MangaResponse manga;
+    String mangaSlug;
     List<CommentResponse> comments;
+    Date createAt;
+    Date updateAt;
 
     public static ChapterResponse toChapterResponse(Chapter chapter) {
         List<CommentResponse> comments = Optional.ofNullable(chapter.getComments())
@@ -36,8 +39,10 @@ public class ChapterResponse {
                 .id(chapter.getId())
                 .chapterNumber(chapter.getChapterNumber())
                 .content(chapter.getContent())
-                .manga(MangaResponse.toMangaResponse(chapter.getManga()))
+                .mangaSlug(chapter.getManga().getSlug())
                 .comments(comments)
+                .createAt(chapter.getCreateAt())
+                .updateAt(chapter.getUpdateAt())
                 .build();
     }
 }

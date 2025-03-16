@@ -21,8 +21,8 @@ public class SecurityConfig {
             "/auth/*",
             "/category/get-all",
             "/user/get-paging",
-            "/chapter/get/*",
             "/manga/get/*",
+            "/chapter/*/get/*",
     };
     @Autowired
     private CustomJwtDecoder customJwtDecoder;

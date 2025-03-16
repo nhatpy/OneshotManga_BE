@@ -1,5 +1,7 @@
 package com.anime_social.dto.response;
 
+import java.util.Date;
+
 import com.anime_social.models.Comment;
 
 import lombok.AllArgsConstructor;
@@ -17,7 +19,9 @@ public class CommentResponse {
     String id;
     String content;
     UserResponse user;
-    ChapterResponse chapter;
+    String chapterId;
+    Date createAt;
+    Date updateAt;
 
     public static CommentResponse toCommentResponse(Comment comment) {
 
@@ -25,7 +29,9 @@ public class CommentResponse {
                 .id(comment.getId())
                 .content(comment.getContent())
                 .user(UserResponse.toUserResponse(comment.getUser()))
-                .chapter(ChapterResponse.toChapterResponse(comment.getChapter()))
+                .chapterId(comment.getChapter().getId())
+                .createAt(comment.getCreateAt())
+                .updateAt(comment.getUpdateAt())
                 .build();
     }
 }

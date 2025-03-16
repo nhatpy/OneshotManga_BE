@@ -10,6 +10,7 @@ import com.anime_social.repositorys.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Service
+@Slf4j
 public class UserService {
     UserRepository userRepository;
 
@@ -123,13 +125,14 @@ public class UserService {
     }
 
     public AppResponse getUsersPaging(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        int starterPage = page - 1;
+        Pageable pageable = PageRequest.of(starterPage, size);
         List<User> users = userRepository.findAllUserVerified(pageable);
 
         List<UserResponse> userResponses = users.stream()
                 .map(user -> UserResponse.toUserResponse(user))
                 .toList();
-        Integer count = userRepository.getNumberOfUser().orElse(0);
+        Integer count = userRepository.getNumberOfUserVerified().orElse(0);
 
         return AppResponse.builder()
                 .status(HttpStatus.OK)

@@ -1,12 +1,17 @@
 package com.anime_social.services;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.anime_social.dto.request.HistoryReadRequest;
 import com.anime_social.dto.response.AppResponse;
+import com.anime_social.dto.response.HistoryListMangaResponse;
 import com.anime_social.exception.CusRunTimeException;
 import com.anime_social.exception.ErrorCode;
 import com.anime_social.models.Manga;
@@ -52,22 +57,32 @@ public class HistoryReadService {
         Manga manga = mangaRepository.findById(mangaId)
                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
 
+        manga.setView(manga.getView() + 1);
+        Manga savedManga = mangaRepository.save(manga);
+
         UserReadManga saveUserReadManga = UserReadManga.builder()
                 .user(user)
-                .manga(manga)
+                .manga(savedManga)
                 .lastReadAtChapter(historyReadRequest.getReadChapter())
                 .lastReadAtDate(historyReadRequest.getReadDate())
                 .build();
 
-        userReadMangaRepository.save(saveUserReadManga);
+        UserReadManga history = userReadMangaRepository.save(saveUserReadManga);
 
         return AppResponse.builder()
                 .status(HttpStatus.CREATED)
+                .data(HistoryListMangaResponse.toHistoryListResponse(history))
+                .message("Đã thêm vào lịch sử theo dõi")
                 .build();
     }
 
     public AppResponse reread(String userId, String mangaId, HistoryReadRequest historyReadRequest) {
         Optional<UserReadManga> userReadManga = userReadMangaRepository.findByUserIdAndMangaId(userId, mangaId);
+        Manga manga = mangaRepository.findById(mangaId)
+                .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
+
+        manga.setView(manga.getView() + 1);
+        mangaRepository.save(manga);
 
         if (userReadManga.isEmpty()) {
             throw new CusRunTimeException(ErrorCode.HISTORY_NOT_FOUND);
@@ -76,10 +91,12 @@ public class HistoryReadService {
         userReadManga.get().setLastReadAtChapter(historyReadRequest.getReadChapter());
         userReadManga.get().setLastReadAtDate(historyReadRequest.getReadDate());
 
-        userReadMangaRepository.save(userReadManga.get());
+        UserReadManga savedHistory = userReadMangaRepository.save(userReadManga.get());
 
         return AppResponse.builder()
                 .status(HttpStatus.OK)
+                .message("Đã cập nhật lịch sử theo dõi")
+                .data(HistoryListMangaResponse.toHistoryListResponse(savedHistory))
                 .build();
     }
 
@@ -94,6 +111,25 @@ public class HistoryReadService {
 
         return AppResponse.builder()
                 .status(HttpStatus.OK)
+                .message("Đã xóa truyện khỏi lịch sử theo dõi")
+                .build();
+    }
+
+    public AppResponse getHistoryListMangaPaging(String userId, int page, int size) {
+        int staterPage = page - 1;
+        Pageable pageable = PageRequest.of(staterPage, size);
+
+        Integer total = userReadMangaRepository.countByUserIdAndMangaId(userId).orElse(0);
+        List<UserReadManga> userReadMangas = userReadMangaRepository.findAllByUserIdPaging(userId, pageable);
+
+        List<HistoryListMangaResponse> historyListMangaResponses = userReadMangas.stream()
+                .map(HistoryListMangaResponse::toHistoryListResponse)
+                .collect(Collectors.toList());
+
+        return AppResponse.builder()
+                .status(HttpStatus.OK)
+                .data(historyListMangaResponses)
+                .totalItem(total)
                 .build();
     }
 }

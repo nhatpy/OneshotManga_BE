@@ -18,8 +18,8 @@ public interface MangaRepository extends JpaRepository<Manga, String> {
     List<Manga> findAllPagingWithActive(Pageable pageable);
 
     @Query("SELECT COUNT(m) FROM Manga m WHERE m.isActive = true")
-    Integer getNumberOfAllActive();
+    Optional<Integer> getNumberOfAllActive();
 
     @Query("SELECT COUNT(m) FROM Manga m")
-    Integer getNumberOfAll();
+    Optional<Integer> getNumberOfAll();
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anime_social.dto.request.HistoryReadRequest;
@@ -49,5 +50,13 @@ public class HistoryReadController {
             @PathVariable String mangaId,
             @PathVariable String userId) {
         return historyReadService.unread(userId, mangaId);
+    }
+
+    @GetMapping("/get-paging")
+    public AppResponse getHistoryListMangaPaging(
+            @PathVariable String userId,
+            @RequestParam int page,
+            @RequestParam int size) {
+        return historyReadService.getHistoryListMangaPaging(userId, page, size);
     }
 }
