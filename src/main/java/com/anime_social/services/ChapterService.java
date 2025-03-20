@@ -1,8 +1,11 @@
 package com.anime_social.services;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.anime_social.controllers.NotificationController;
 import com.anime_social.dto.request.CreateChapter;
 import com.anime_social.dto.request.UpdateChapter;
 import com.anime_social.dto.response.AppResponse;
@@ -23,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ChapterService {
         private final ChapterRepository chapterRepository;
         private final MangaRepository mangaRepository;
+        private final NotificationController notificationController;
 
         public AppResponse createChapter(String mangaId, CreateChapter createChapterRequest) {
                 Manga manga = mangaRepository.findById(mangaId)
@@ -41,6 +45,12 @@ public class ChapterService {
                                 .chapterNumber(createChapterRequest.getChapterNumber())
                                 .build();
                 Chapter savedChapter = chapterRepository.save(chapter);
+
+                notificationController.sendNotification("(Public) Có chapter mới của manga "
+                                + manga.getName());
+
+                notificationController.sendNotificationToUser("dolongnhat0302@gmail.com",
+                                "(Private) Có chapter mới của manga " + manga.getName());
 
                 return AppResponse.builder()
                                 .status(HttpStatus.CREATED)
