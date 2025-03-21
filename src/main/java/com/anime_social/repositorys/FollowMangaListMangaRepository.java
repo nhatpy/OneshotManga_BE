@@ -13,15 +13,18 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FollowMangaListMangaRepository extends JpaRepository<FollowMangaListManga, String> {
-    @Query("SELECT fmlm FROM FollowMangaListManga fmlm WHERE fmlm.followMangaList.id = :followMangaListId AND fmlm.manga.id=:mangaId")
-    Optional<FollowMangaListManga> findByFollowMangaListIdAndMangaId(
-            @Param("followMangaListId") String followMangaListId,
-            @Param("mangaId") String mangaId);
+        @Query("SELECT fmlm FROM FollowMangaListManga fmlm WHERE fmlm.followMangaList.id = :followMangaListId AND fmlm.manga.id=:mangaId")
+        Optional<FollowMangaListManga> findByFollowMangaListIdAndMangaId(
+                        @Param("followMangaListId") String followMangaListId,
+                        @Param("mangaId") String mangaId);
 
-    @Query("SELECT fmlm FROM FollowMangaListManga fmlm WHERE fmlm.followMangaList.id = :followMangaListId")
-    List<FollowMangaListManga> findMangainListByFollowMangaListIdPaging(
-            @Param("followMangaListId") String followMangaListId, Pageable pageable);
+        @Query("SELECT fmlm FROM FollowMangaListManga fmlm WHERE fmlm.followMangaList.id = :followMangaListId")
+        List<FollowMangaListManga> findMangainListByFollowMangaListIdPaging(
+                        @Param("followMangaListId") String followMangaListId, Pageable pageable);
 
-    @Query("SELECT COUNT(fmlm) FROM FollowMangaListManga fmlm WHERE fmlm.followMangaList.id = :followMangaListId")
-    Optional<Integer> countMangaInListByFollowListId(@Param("followMangaListId") String followMangaListId);
+        @Query("SELECT COUNT(fmlm) FROM FollowMangaListManga fmlm WHERE fmlm.followMangaList.id = :followMangaListId")
+        Optional<Integer> countMangaInListByFollowListId(@Param("followMangaListId") String followMangaListId);
+
+        @Query("SELECT fmlm.followMangaList.id FROM FollowMangaListManga fmlm WHERE fmlm.manga.id = :mangaId")
+        List<String> findFollowMangaListIdByMangaId(@Param("mangaId") String mangaId);
 }

@@ -16,8 +16,9 @@ public class NotificationController {
         simpMessagingTemplate.convertAndSend("/topic/notifications", message);
     }
 
-    public void sendNotificationToUser(String username, String message) {
-        simpMessagingTemplate.convertAndSendToUser(username, "/queue/notifications", message);
+    public void sendNotificationToUser(String userId, String message) {
+        String destination = "/queue/notifications/" + userId;
+        simpMessagingTemplate.convertAndSend(destination, message);
     }
 
 }

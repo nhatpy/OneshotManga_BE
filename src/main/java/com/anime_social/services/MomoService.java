@@ -33,6 +33,7 @@ public class MomoService {
     private final PaymentBillRepository paymentBillRepository;
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
+    private final NotificationService notificationService;
 
     @Value("${MOMO_ACCESS_KEY}")
     private String accessKey;
@@ -120,10 +121,10 @@ public class MomoService {
     }
 
     public ResponseEntity<String> handleCallback(Map<String, String> response) {
-        log.info("Callback body: {}", response);
-
         String requestId = response.get("requestId");
+        String orderInfo = response.get("orderInfo");
         Integer resultCode = Integer.parseInt(response.get("resultCode"));
+        long amount = Long.parseLong(response.get("amount"));
 
         if (resultCode != 0) {
             log.error("Error when payment: {}", resultCode);
@@ -140,6 +141,8 @@ public class MomoService {
                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.PAYMENT_BILL_NOT_FOUND));
         paymentBill.setStatus(Status.SUCCESS.name());
         paymentBillRepository.save(paymentBill);
+
+        notificationService.paymentSuccessNotification(orderInfo, requestId, amount);
 
         return ResponseEntity.ok().build();
     }

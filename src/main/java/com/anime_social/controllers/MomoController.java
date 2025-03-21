@@ -37,7 +37,6 @@ public class MomoController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/callback")
     public ResponseEntity<String> handleCallback(@RequestParam Map<String, String> response) {
-        log.info("Momo response after payment: {}", response);
         return momoService.handleCallback(response);
     }
 }

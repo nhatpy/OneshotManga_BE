@@ -19,7 +19,7 @@ public class Chapter extends BaseEntity {
     @Column(name = "id", updatable = false, nullable = false)
     String id;
 
-    @Column(name = "chapter_number", unique = true)
+    @Column(name = "chapter_number")
     Integer chapterNumber;
 
     @Column(name = "content")
