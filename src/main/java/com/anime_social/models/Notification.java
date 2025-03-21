@@ -1,5 +1,7 @@
 package com.anime_social.models;
 
+import com.anime_social.enums.NotiType;
+
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -17,13 +19,14 @@ public class Notification extends BaseEntity {
     @Column(name = "id", updatable = false, nullable = false)
     String id;
 
-    @Column(name = "title")
-    String title;
-
     @Column(name = "content", columnDefinition = "LONGTEXT")
     String content;
 
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    NotiType type;
+
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     User user;
 }

@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ChapterService {
         private final ChapterRepository chapterRepository;
         private final MangaRepository mangaRepository;
+        private final NotificationService notificationService;
 
         public AppResponse createChapter(String mangaId, CreateChapter createChapterRequest) {
                 Manga manga = mangaRepository.findById(mangaId)
@@ -41,6 +42,8 @@ public class ChapterService {
                                 .chapterNumber(createChapterRequest.getChapterNumber())
                                 .build();
                 Chapter savedChapter = chapterRepository.save(chapter);
+
+                notificationService.createChapterNotification(mangaId, manga.getName());
 
                 return AppResponse.builder()
                                 .status(HttpStatus.CREATED)
