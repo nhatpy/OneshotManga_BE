@@ -3,6 +3,8 @@ package com.anime_social.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -36,6 +38,7 @@ public class MangaService {
         private final UserRepository userRepository;
         private final CategoryRepository categoryRepository;
 
+        @CacheEvict(value = "manga", allEntries = true)
         public AppResponse createManga(PostManga request) {
                 Manga existedManga = mangaRepository.findBySlug(request.getSlug())
                                 .orElse(null);
@@ -73,6 +76,7 @@ public class MangaService {
                                 .build();
         }
 
+        @CacheEvict(value = "manga", allEntries = true)
         public AppResponse updateManga(String slug, UpdateManga request) {
                 Manga manga = mangaRepository.findBySlug(slug)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
@@ -92,6 +96,7 @@ public class MangaService {
                                 .build();
         }
 
+        @CacheEvict(value = "manga", allEntries = true)
         public AppResponse deleteManga(String slug) {
                 Manga manga = mangaRepository.findBySlug(slug)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
@@ -114,6 +119,7 @@ public class MangaService {
                                 .build();
         }
 
+        @CacheEvict(value = "manga", allEntries = true)
         public AppResponse bulkActiveManga(BulkActiveRequest bulkActiveRequest) {
                 List<String> mangaIds = bulkActiveRequest.getMangaIds();
 
@@ -130,37 +136,35 @@ public class MangaService {
                                 .build();
         }
 
-        public AppResponse getMangaPaging(int page, int size, int type) {
+        @Cacheable(value = "manga", key = "'manga_at_' + #page + '_' + #size + '_' + #type")
+        private List<MangaResponse> getCachingMangaData(int page, int size, int type) {
+                log.warn("fetching data from database");
                 int staterPage = page - 1;
                 Pageable request = PageRequest.of(staterPage, size);
 
-                if (type == 1) {
-                        List<Manga> mangas = mangaRepository.findAllPagingWithActive(request);
-                        List<MangaResponse> mangaResponses = mangas.stream()
-                                        .map(MangaResponse::toMangaResponse)
-                                        .toList();
+                List<Manga> mangas = (type == 1)
+                                ? mangaRepository.findAllPagingWithActive(request)
+                                : mangaRepository.findAll(request).toList();
 
-                        Integer total = mangaRepository.getNumberOfAllActive().orElse(0);
-
-                        return AppResponse.builder()
-                                        .status(HttpStatus.OK)
-                                        .totalItem(total)
-                                        .data(mangaResponses)
-                                        .message("Lấy danh sách manga đã kích hoạt thành công")
-                                        .build();
-                }
-                List<Manga> mangas = mangaRepository.findAll(request).toList();
-                List<MangaResponse> mangaResponses = mangas.stream()
+                return mangas.stream()
                                 .map(MangaResponse::toMangaResponse)
                                 .toList();
+        }
 
-                Integer total = mangaRepository.getNumberOfAll().orElse(0);
+        public AppResponse getMangaPaging(int page, int size, int type) {
+                List<MangaResponse> mangaResponses = getCachingMangaData(page, size, type);
+
+                Integer total = (type == 1)
+                                ? mangaRepository.getNumberOfAllActive().orElse(0)
+                                : mangaRepository.getNumberOfAll().orElse(0);
 
                 return AppResponse.builder()
                                 .status(HttpStatus.OK)
                                 .totalItem(total)
                                 .data(mangaResponses)
-                                .message("Lấy danh sách tất cả manga thành công")
+                                .message(type == 1
+                                                ? "Lấy danh sách manga đã kích hoạt thành công"
+                                                : "Lấy danh sách tất cả manga thành công")
                                 .build();
         }
 }
