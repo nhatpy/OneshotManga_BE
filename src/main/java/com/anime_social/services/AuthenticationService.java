@@ -208,6 +208,7 @@ public class AuthenticationService {
         userRepository.save(user);
 
         response.sendRedirect("http://localhost:5173/verify-success");
+        // response.sendRedirect("https://anime-social-fe.vercel.app/verify-success");
     }
 
 }
