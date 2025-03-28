@@ -51,8 +51,8 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/warning")
-    public AppResponse warningUser(@RequestParam String id) {
+    @PatchMapping("/warning/{id}")
+    public AppResponse warningUser(@PathVariable String id) {
         return userService.warningUser(id);
     }
 
