@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -36,7 +34,6 @@ public class FollowMangaService {
         private final MangaRepository mangaRepository;
         private final UserRepository userRepository;
 
-        @CacheEvict(value = "follow", key = "'follow_list_' + #mangaId + '_' + #userId")
         public AppResponse addToFollowList(String mangaId, String userId) {
                 User user = userRepository.findById(userId)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.USER_NOT_FOUND));
@@ -79,7 +76,6 @@ public class FollowMangaService {
                                 .build();
         }
 
-        @CacheEvict(value = "follow", key = "'follow_list_' + #mangaId + '_' + #userId")
         public AppResponse deleteFromFollowList(String mangaId, String userId) {
                 Manga manga = mangaRepository.findById(mangaId)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
@@ -101,21 +97,16 @@ public class FollowMangaService {
                                 .build();
         }
 
-        @Cacheable(value = "follow", key = "'follow_list_' + #mangaId + '_' + #userId")
-        private List<FollowListMangaResponse> getCachingFollowMangaData(String userId, int page, int size) {
+        public AppResponse getFollowListPaging(String userId, int page, int size) {
                 int starterPage = page - 1;
                 Pageable pageable = PageRequest.of(starterPage, size);
 
                 List<FollowMangaListManga> followMangaListMangas = followMangaListMangaRepository
                                 .findMangainListByFollowMangaListIdPaging(userId, pageable);
 
-                return followMangaListMangas.stream()
+                List<FollowListMangaResponse> followListMangaResponses = followMangaListMangas.stream()
                                 .map(FollowListMangaResponse::toFollowListResponse)
                                 .collect(Collectors.toList());
-        }
-
-        public AppResponse getFollowListPaging(String userId, int page, int size) {
-                List<FollowListMangaResponse> followListMangaResponses = getCachingFollowMangaData(userId, page, size);
 
                 Integer total = followMangaListMangaRepository.countMangaInListByFollowListId(userId)
                                 .orElse(0);

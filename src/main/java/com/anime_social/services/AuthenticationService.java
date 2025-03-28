@@ -27,6 +27,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -55,6 +56,7 @@ public class AuthenticationService {
     @Value("${EXPIRED_TIME}")
     long jwtExpiredTime;
 
+    @CacheEvict(value = "USER_CACHE", allEntries = true)
     public AppResponse register(Register registerRequest) throws MessagingException {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         Optional<User> existed_user = userRepository.findByEmail(registerRequest.getEmail());

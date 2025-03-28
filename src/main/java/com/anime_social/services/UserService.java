@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -42,6 +44,7 @@ public class UserService {
         }
     }
 
+    @CacheEvict(value = "USER_CACHE", key = "getTopUsers")
     public AppResponse updateUser(String id, UpdateUser userRequest) {
         Optional<User> user = userRepository.findById(id);
 
@@ -65,6 +68,7 @@ public class UserService {
         }
     }
 
+    @CacheEvict(value = "USER_CACHE", key = "getTopUsers")
     public AppResponse deleteUser(String id) {
         Optional<User> user = userRepository.findById(id);
 
@@ -94,6 +98,7 @@ public class UserService {
                 .build();
     }
 
+    @CacheEvict(value = "USER_CACHE", key = "getTopUsers")
     public AppResponse warningUser(String id) {
         Optional<User> user = userRepository.findById(id);
 
@@ -139,6 +144,24 @@ public class UserService {
                 .message("Lấy danh sách người dùng theo trang thành công")
                 .data(userResponses)
                 .totalItem(count)
+                .build();
+    }
+
+    @Cacheable(value = "USER_CACHE", key = "#root.methodName")
+    public AppResponse getTopUsers() {
+        Pageable pageable = PageRequest
+                .ofSize(7);
+
+        List<User> users = userRepository.findAllTopUser(pageable);
+
+        List<UserResponse> userResponses = users.stream()
+                .map(user -> UserResponse.toUserResponse(user))
+                .toList();
+
+        return AppResponse.builder()
+                .status(HttpStatus.OK)
+                .message("Lấy bảng xếp hạng người dùng thành công")
+                .data(userResponses)
                 .build();
     }
 }

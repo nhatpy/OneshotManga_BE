@@ -20,7 +20,7 @@ public class SecurityConfig {
     private final String[] PUBLIC_ENDPOINTS = {
             "/auth/*",
             "/category/get-all",
-            "/user/get-paging",
+            "/user/get-top",
             "/manga/get/*",
             "/chapter/*/get/*",
             "/ws/**"

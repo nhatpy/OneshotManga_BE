@@ -3,6 +3,8 @@ package com.anime_social.services;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class CategoryService {
     private final CategoryRepository categoryRepository;
 
+    @Cacheable(value = "CATEGORY_CACHE", key = "#root.methodName")
     public AppResponse getCategories() {
         List<Category> categories = categoryRepository.findAll();
         return AppResponse.builder()
@@ -33,6 +36,7 @@ public class CategoryService {
                 .build();
     }
 
+    @CacheEvict(value = "CATEGORY_CACHE", key = "getCategories")
     public AppResponse createCategory(CreateCategory request) {
         Optional<Category> category = categoryRepository.findByName(request.getName());
         if (category.isPresent()) {
@@ -53,6 +57,7 @@ public class CategoryService {
                 .build();
     }
 
+    @CacheEvict(value = "CATEGORY_CACHE", key = "getCategories")
     public AppResponse updateCategory(String id, UpdateCategory request) {
         Category category = categoryRepository.findById(id).orElse(null);
         if (category == null) {
@@ -71,6 +76,7 @@ public class CategoryService {
                 .build();
     }
 
+    @CacheEvict(value = "CATEGORY_CACHE", key = "getCategories")
     public AppResponse deleteCategory(String id) {
         Category category = categoryRepository.findById(id).orElse(null);
         if (category == null) {

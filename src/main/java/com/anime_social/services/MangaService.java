@@ -3,8 +3,6 @@ package com.anime_social.services;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -38,7 +36,6 @@ public class MangaService {
         private final UserRepository userRepository;
         private final CategoryRepository categoryRepository;
 
-        @CacheEvict(value = "manga", allEntries = true)
         public AppResponse createManga(PostManga request) {
                 Manga existedManga = mangaRepository.findBySlug(request.getSlug())
                                 .orElse(null);
@@ -76,7 +73,6 @@ public class MangaService {
                                 .build();
         }
 
-        @CacheEvict(value = "manga", allEntries = true)
         public AppResponse updateManga(String slug, UpdateManga request) {
                 Manga manga = mangaRepository.findBySlug(slug)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
@@ -96,7 +92,6 @@ public class MangaService {
                                 .build();
         }
 
-        @CacheEvict(value = "manga", allEntries = true)
         public AppResponse deleteManga(String slug) {
                 Manga manga = mangaRepository.findBySlug(slug)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
@@ -119,7 +114,6 @@ public class MangaService {
                                 .build();
         }
 
-        @CacheEvict(value = "manga", allEntries = true)
         public AppResponse bulkActiveManga(BulkActiveRequest bulkActiveRequest) {
                 List<String> mangaIds = bulkActiveRequest.getMangaIds();
 
@@ -136,23 +130,16 @@ public class MangaService {
                                 .build();
         }
 
-        @Cacheable(value = "manga", key = "'manga_at_' + #page + '_' + #size + '_' + #type")
-        private List<MangaResponse> getCachingMangaData(int page, int size, int type) {
-                log.warn("fetching data from database");
+        public AppResponse getMangaPaging(int page, int size, int type) {
                 int staterPage = page - 1;
                 Pageable request = PageRequest.of(staterPage, size);
 
                 List<Manga> mangas = (type == 1)
                                 ? mangaRepository.findAllPagingWithActive(request)
                                 : mangaRepository.findAll(request).toList();
-
-                return mangas.stream()
+                List<MangaResponse> mangaResponses = mangas.stream()
                                 .map(MangaResponse::toMangaResponse)
                                 .toList();
-        }
-
-        public AppResponse getMangaPaging(int page, int size, int type) {
-                List<MangaResponse> mangaResponses = getCachingMangaData(page, size, type);
 
                 Integer total = (type == 1)
                                 ? mangaRepository.getNumberOfAllActive().orElse(0)

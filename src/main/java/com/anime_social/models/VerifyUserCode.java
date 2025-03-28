@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class VerifyUserCode {
+public class VerifyUserCode implements Serializable {
     @Id
     @Column(name = "id")
     String id;

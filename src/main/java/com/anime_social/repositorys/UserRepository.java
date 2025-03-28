@@ -24,4 +24,7 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @Query("SELECT COUNT(u) FROM User u WHERE u.isVerified = true")
     Optional<Integer> getNumberOfUserVerified();
+
+    @Query("SELECT u FROM User u WHERE u.isVerified = true ORDER BY u.wallet DESC")
+    List<User> findAllTopUser(Pageable pageable);
 }

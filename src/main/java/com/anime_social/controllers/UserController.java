@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     UserService userService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/get-paging")
     public AppResponse getUsersPaging(@RequestParam int page, @RequestParam int size) {
         return userService.getUsersPaging(page, size);
@@ -53,5 +54,10 @@ public class UserController {
     @PostMapping("/warning")
     public AppResponse warningUser(@RequestParam String id) {
         return userService.warningUser(id);
+    }
+
+    @GetMapping("/get-top")
+    public AppResponse getTopUsers() {
+        return userService.getTopUsers();
     }
 }

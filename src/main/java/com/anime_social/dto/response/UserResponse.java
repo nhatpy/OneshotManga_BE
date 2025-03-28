@@ -1,5 +1,6 @@
 package com.anime_social.dto.response;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
 
@@ -16,7 +17,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class UserResponse {
+public class UserResponse implements Serializable {
     String id;
     String email;
     String password;
