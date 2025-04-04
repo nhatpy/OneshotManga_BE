@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-        @ExceptionHandler(Exception.class)
-        public ResponseEntity<AppResponse> handlingException(Exception exception) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .body(AppResponse.builder()
-                                                .status(ErrorCode.ERROR_IS_UNCATEGORIZED.getHttpStatus())
-                                                .message(ErrorCode.ERROR_IS_UNCATEGORIZED.getMessage())
-                                                .build());
-        }
+        // @ExceptionHandler(Exception.class)
+        // public ResponseEntity<AppResponse> handlingException(Exception exception) {
+        // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        // .body(AppResponse.builder()
+        // .status(ErrorCode.ERROR_IS_UNCATEGORIZED.getHttpStatus())
+        // .message(ErrorCode.ERROR_IS_UNCATEGORIZED.getMessage())
+        // .build());
+        // }
 
         @ExceptionHandler(CusRunTimeException.class)
         public ResponseEntity<AppResponse> handlingRuntimeException(CusRunTimeException exception) {

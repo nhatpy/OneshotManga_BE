@@ -34,4 +34,27 @@ public class EmailService {
 
         javaMailSender.send(message);
     }
+
+    public void sendEmailToResetPassword(String to, String userId) throws MessagingException {
+        String apiUrl = "http://localhost:8080/api/auth/verify-to-reset?id=" + userId;
+
+        String emailContent = "<html>"
+                + "<body>"
+                + "<h2>Email được gửi để xác nhận đúng là bạn đang thực hiện hành động đổi mật khẩu</h2>"
+                + "<p>Nhấn vào nút bên dưới để xác thực tài khoản:</p>"
+                + "<a href='" + apiUrl + "' "
+                + "style='display:inline-block;background-color:#4CAF50;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;'>"
+                + "Xác nhận tài khoản</a>"
+                + "</body>"
+                + "</html>";
+
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.addTo(to);
+        helper.setSubject("Anime Social - Xác nhận đổi mật khẩu");
+        helper.setText(emailContent, true);
+
+        javaMailSender.send(message);
+    }
 }

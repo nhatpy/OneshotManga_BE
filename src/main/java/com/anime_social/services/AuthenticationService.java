@@ -4,6 +4,8 @@ import com.anime_social.dto.request.Introspect;
 import com.anime_social.dto.request.Logout;
 import com.anime_social.dto.request.Register;
 import com.anime_social.dto.request.Authenticate;
+import com.anime_social.dto.request.ChangePasswordRequest;
+import com.anime_social.dto.request.EmailRequest;
 import com.anime_social.dto.response.AppResponse;
 import com.anime_social.dto.response.AuthenticateResponse;
 import com.anime_social.dto.response.UserResponse;
@@ -213,4 +215,40 @@ public class AuthenticationService {
         // response.sendRedirect("https://anime-social-fe.vercel.app/verify-success");
     }
 
+    public AppResponse sendVerifyEmail(EmailRequest emailRequest) throws MessagingException {
+        User user = userRepository.findByEmail(emailRequest.getEmail())
+                .orElseThrow(() -> new CusRunTimeException(ErrorCode.EMAIL_NOT_FOUND));
+
+        emailService.sendEmailToResetPassword(user.getEmail(), user.getId());
+
+        return AppResponse.builder()
+                .status(HttpStatus.OK)
+                .message("Gửi email thành công")
+                .build();
+    }
+
+    public void verifyToReset(String userId, HttpServletResponse response) throws IOException {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new CusRunTimeException(ErrorCode.USER_NOT_FOUND));
+
+        String redirectUrl = "http://localhost:5173/reset-password?id=" + userId;
+        // String redirectUrl = "https://anime-social-fe.vercel.app/reset-password?id="
+        // + userId;
+
+        response.sendRedirect(redirectUrl);
+    }
+
+    public AppResponse resetPassword(String userId, ChangePasswordRequest changePasswordRequest) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CusRunTimeException(ErrorCode.USER_NOT_FOUND));
+
+        user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+        userRepository.save(user);
+
+        return AppResponse.builder()
+                .status(HttpStatus.OK)
+                .message("Đặt lại mật khẩu thành công")
+                .build();
+    }
 }

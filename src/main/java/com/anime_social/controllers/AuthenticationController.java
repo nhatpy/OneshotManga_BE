@@ -4,6 +4,8 @@ import com.anime_social.dto.request.Introspect;
 import com.anime_social.dto.request.Logout;
 import com.anime_social.dto.request.Register;
 import com.anime_social.dto.request.Authenticate;
+import com.anime_social.dto.request.ChangePasswordRequest;
+import com.anime_social.dto.request.EmailRequest;
 import com.anime_social.dto.response.AppResponse;
 import com.anime_social.services.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
@@ -50,5 +52,23 @@ public class AuthenticationController {
     public void verifyUser(@RequestParam(name = "code") String verifyCode, HttpServletResponse response)
             throws IOException {
         authenticationService.verifyUser(verifyCode, response);
+    }
+
+    @PostMapping("/send-verify-email")
+    public AppResponse sendVerifyEmail(@RequestBody @Valid EmailRequest email) throws MessagingException {
+        return authenticationService.sendVerifyEmail(email);
+    }
+
+    @GetMapping("/verify-to-reset")
+    public void verifyToRest(@RequestParam(name = "id") String userId, HttpServletResponse response)
+            throws IOException {
+        authenticationService.verifyToReset(userId, response);
+    }
+
+    @PostMapping("/reset-password")
+    public AppResponse resetPassword(
+            @RequestParam(name = "id") String userId,
+            @RequestBody @Valid ChangePasswordRequest changePasswordRequest) {
+        return authenticationService.resetPassword(userId, changePasswordRequest);
     }
 }
