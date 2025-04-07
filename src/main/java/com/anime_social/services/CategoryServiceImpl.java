@@ -16,6 +16,7 @@ import com.anime_social.exception.CusRunTimeException;
 import com.anime_social.exception.ErrorCode;
 import com.anime_social.models.Category;
 import com.anime_social.repositories.CategoryRepository;
+import com.anime_social.services.interfaces.CategoryService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +24,10 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CategoryService {
+public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
+    @Override
     @Cacheable(value = "CATEGORY_CACHE", key = "#root.methodName")
     public AppResponse getCategories() {
         List<Category> categories = categoryRepository.findAll();
@@ -36,6 +38,7 @@ public class CategoryService {
                 .build();
     }
 
+    @Override
     @CacheEvict(value = "CATEGORY_CACHE", key = "'getCategories'")
     public AppResponse createCategory(CreateCategory request) {
         Optional<Category> category = categoryRepository.findByName(request.getName());
@@ -57,6 +60,7 @@ public class CategoryService {
                 .build();
     }
 
+    @Override
     @CacheEvict(value = "CATEGORY_CACHE", key = "'getCategories'")
     public AppResponse updateCategory(String id, UpdateCategory request) {
         Category category = categoryRepository.findById(id).orElse(null);
@@ -76,6 +80,7 @@ public class CategoryService {
                 .build();
     }
 
+    @Override
     @CacheEvict(value = "CATEGORY_CACHE", key = "'getCategories'")
     public AppResponse deleteCategory(String id) {
         Category category = categoryRepository.findById(id).orElse(null);
@@ -92,6 +97,7 @@ public class CategoryService {
                 .build();
     }
 
+    @Override
     public AppResponse getPaging(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         List<Category> categories = categoryRepository.findAll(pageRequest).toList();

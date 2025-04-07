@@ -5,6 +5,7 @@ import com.anime_social.dto.response.AppResponse;
 import com.anime_social.dto.response.UserResponse;
 import com.anime_social.models.User;
 import com.anime_social.repositories.UserRepository;
+import com.anime_social.services.interfaces.UserService;
 import com.anime_social.exception.CusRunTimeException;
 import com.anime_social.exception.ErrorCode;
 
@@ -28,9 +29,10 @@ import java.util.Optional;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Service
 @Slf4j
-public class UserService {
+public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
+    @Override
     public AppResponse getUserById(String id) {
         Optional<User> user = userRepository.findById(id);
 
@@ -45,6 +47,7 @@ public class UserService {
         }
     }
 
+    @Override
     @CacheEvict(value = "USER_CACHE", key = "'getTopUsers'")
     public AppResponse updateUser(String id, UpdateUser userRequest) {
         Optional<User> user = userRepository.findById(id);
@@ -66,6 +69,7 @@ public class UserService {
         }
     }
 
+    @Override
     @CacheEvict(value = "USER_CACHE", key = "'getTopUsers'")
     public AppResponse deleteUser(String id) {
         Optional<User> user = userRepository.findById(id);
@@ -82,6 +86,7 @@ public class UserService {
         }
     }
 
+    @Override
     public AppResponse currentUser() {
         var context = SecurityContextHolder.getContext();
         String email = context.getAuthentication().getName();
@@ -96,6 +101,7 @@ public class UserService {
                 .build();
     }
 
+    @Override
     @CacheEvict(value = "USER_CACHE", key = "'getTopUsers'")
     public AppResponse warningUser(String id) {
         Optional<User> user = userRepository.findById(id);
@@ -127,6 +133,7 @@ public class UserService {
         }
     }
 
+    @Override
     public AppResponse getUsersPaging(int page, int size) {
         int starterPage = page - 1;
         Pageable pageable = PageRequest.of(starterPage, size);
@@ -145,6 +152,7 @@ public class UserService {
                 .build();
     }
 
+    @Override
     @Cacheable(value = "USER_CACHE", key = "#root.methodName")
     public AppResponse getTopUsers() {
         Pageable pageable = PageRequest

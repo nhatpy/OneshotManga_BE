@@ -20,17 +20,19 @@ import com.anime_social.models.User;
 import com.anime_social.repositories.FollowMangaListMangaRepository;
 import com.anime_social.repositories.NotificationRepository;
 import com.anime_social.repositories.UserRepository;
+import com.anime_social.services.interfaces.NotificationService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class NotificationService {
+public class NotificationServiceImpl implements NotificationService {
         private final FollowMangaListMangaRepository followMangaListMangaRepository;
         private final NotificationController notificationController;
         private final UserRepository userRepository;
         private final NotificationRepository notificationRepository;
 
+        @Override
         public void createChapterNotification(String mangaId, String mangaName) {
                 List<String> userIds = followMangaListMangaRepository.findFollowMangaListIdByMangaId(mangaId);
                 List<User> users = userRepository.findAllById(userIds);
@@ -47,6 +49,7 @@ public class NotificationService {
                 });
         }
 
+        @Override
         public void paymentSuccessNotification(String userId, String paymentId, long amount) {
                 User user = userRepository.findById(userId)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.USER_NOT_FOUND));
@@ -60,6 +63,7 @@ public class NotificationService {
                                 "Hóa đơn " + paymentId + " đã thanh toán thành công " + amount + " VNĐ");
         }
 
+        @Override
         public AppResponse getNotifications(String userId, int page, int size) {
                 int starterPage = page - 1;
                 Pageable pageable = PageRequest.of(starterPage, size, Sort.by("type").ascending());

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.anime_social.dto.request.CreateChapter;
 import com.anime_social.dto.request.UpdateChapter;
 import com.anime_social.dto.response.AppResponse;
-import com.anime_social.services.ChapterService;
+import com.anime_social.services.interfaces.ChapterService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

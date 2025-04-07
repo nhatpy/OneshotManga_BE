@@ -7,11 +7,14 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.anime_social.services.interfaces.EmailService;
+
 @Service
 @RequiredArgsConstructor
-public class EmailService {
+public class EmailServiceImpl implements EmailService {
     private final JavaMailSender javaMailSender;
 
+    @Override
     public void sendEmail(String to, String verificationCode) throws MessagingException {
         String apiUrl = "http://localhost:8080/api/auth/verify-user?code=" + verificationCode;
 
@@ -35,6 +38,7 @@ public class EmailService {
         javaMailSender.send(message);
     }
 
+    @Override
     public void sendEmailToResetPassword(String to, String userId) throws MessagingException {
         String apiUrl = "http://localhost:8080/api/auth/verify-to-reset?id=" + userId;
 

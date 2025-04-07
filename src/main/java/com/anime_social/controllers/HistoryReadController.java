@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.anime_social.dto.request.HistoryReadRequest;
 import com.anime_social.dto.response.AppResponse;
-import com.anime_social.services.HistoryReadService;
+import com.anime_social.services.interfaces.HistoryReadService;
 
 import lombok.RequiredArgsConstructor;
 

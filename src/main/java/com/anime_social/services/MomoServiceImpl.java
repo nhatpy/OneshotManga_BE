@@ -13,6 +13,8 @@ import com.anime_social.models.PaymentBill;
 import com.anime_social.models.User;
 import com.anime_social.repositories.PaymentBillRepository;
 import com.anime_social.repositories.UserRepository;
+import com.anime_social.services.interfaces.MomoService;
+import com.anime_social.services.interfaces.NotificationService;
 
 import java.util.Map;
 import java.util.UUID;
@@ -29,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MomoService {
+public class MomoServiceImpl implements MomoService {
     private final PaymentBillRepository paymentBillRepository;
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
@@ -48,6 +50,7 @@ public class MomoService {
     @Value("${MOMO_CALLBACK_URL}")
     private String callbackUrl;
 
+    @Override
     public MomoPaymentResponse createQR(Payment paymentRequest) {
         String requestId = UUID.randomUUID().toString();
         String orderId = UUID.randomUUID().toString();
@@ -120,6 +123,7 @@ public class MomoService {
         return hashString.toString();
     }
 
+    @Override
     public ResponseEntity<String> handleCallback(Map<String, String> response) {
         String requestId = response.get("requestId");
         String orderInfo = response.get("orderInfo");

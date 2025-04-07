@@ -23,6 +23,7 @@ import com.anime_social.repositories.CategoryMangaRepository;
 import com.anime_social.repositories.CategoryRepository;
 import com.anime_social.repositories.MangaRepository;
 import com.anime_social.repositories.UserRepository;
+import com.anime_social.services.interfaces.MangaService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,12 +31,13 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class MangaService {
+public class MangaServiceImpl implements MangaService {
         private final MangaRepository mangaRepository;
         private final CategoryMangaRepository categoryMangaRepository;
         private final UserRepository userRepository;
         private final CategoryRepository categoryRepository;
 
+        @Override
         public AppResponse createManga(PostManga request) {
                 Manga existedManga = mangaRepository.findBySlug(request.getSlug())
                                 .orElse(null);
@@ -73,6 +75,7 @@ public class MangaService {
                                 .build();
         }
 
+        @Override
         public AppResponse updateManga(String slug, UpdateManga request) {
                 Manga manga = mangaRepository.findBySlug(slug)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
@@ -92,6 +95,7 @@ public class MangaService {
                                 .build();
         }
 
+        @Override
         public AppResponse deleteManga(String slug) {
                 Manga manga = mangaRepository.findBySlug(slug)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
@@ -104,6 +108,7 @@ public class MangaService {
                                 .build();
         }
 
+        @Override
         public AppResponse getMangaBySlug(String slug) {
                 Manga manga = mangaRepository.findBySlug(slug)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
@@ -114,6 +119,7 @@ public class MangaService {
                                 .build();
         }
 
+        @Override
         public AppResponse bulkActiveManga(BulkActiveRequest bulkActiveRequest) {
                 List<String> mangaIds = bulkActiveRequest.getMangaIds();
 
@@ -130,6 +136,7 @@ public class MangaService {
                                 .build();
         }
 
+        @Override
         public AppResponse getMangaPaging(int page, int size, int type) {
                 int staterPage = page - 1;
                 Pageable request = PageRequest.of(staterPage, size);

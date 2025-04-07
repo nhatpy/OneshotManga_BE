@@ -14,7 +14,7 @@ import com.anime_social.dto.request.BulkActiveRequest;
 import com.anime_social.dto.request.PostManga;
 import com.anime_social.dto.request.UpdateManga;
 import com.anime_social.dto.response.AppResponse;
-import com.anime_social.services.MangaService;
+import com.anime_social.services.interfaces.MangaService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

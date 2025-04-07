@@ -8,7 +8,7 @@ import com.anime_social.dto.request.Authenticate;
 import com.anime_social.dto.request.ChangePasswordRequest;
 import com.anime_social.dto.request.EmailRequest;
 import com.anime_social.dto.response.AppResponse;
-import com.anime_social.services.AuthenticationService;
+import com.anime_social.services.interfaces.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletResponse;

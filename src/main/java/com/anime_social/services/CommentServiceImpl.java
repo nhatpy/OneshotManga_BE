@@ -15,16 +15,18 @@ import com.anime_social.models.User;
 import com.anime_social.repositories.ChapterRepository;
 import com.anime_social.repositories.CommentRepository;
 import com.anime_social.repositories.UserRepository;
+import com.anime_social.services.interfaces.CommentService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CommentService {
+public class CommentServiceImpl implements CommentService {
         private final CommentRepository commentRepository;
         private final ChapterRepository chapterRepository;
         private final UserRepository userRepository;
 
+        @Override
         public AppResponse createComment(PostComment request) {
                 User user = userRepository.findById(request.getUserId())
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.USER_NOT_FOUND));
@@ -44,6 +46,7 @@ public class CommentService {
                                 .build();
         }
 
+        @Override
         public AppResponse deleteComment(String id) {
                 Comment comment = commentRepository.findById(id)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.COMMENT_NOT_FOUND));
@@ -56,6 +59,7 @@ public class CommentService {
                                 .build();
         }
 
+        @Override
         public AppResponse updateComment(String id, UpdateComment request) {
                 Comment comment = commentRepository.findById(id)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.COMMENT_NOT_FOUND));

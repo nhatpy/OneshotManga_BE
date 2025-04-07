@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.anime_social.dto.request.PostComment;
 import com.anime_social.dto.request.UpdateComment;
 import com.anime_social.dto.response.AppResponse;
-import com.anime_social.services.CommentService;
+import com.anime_social.services.interfaces.CommentService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

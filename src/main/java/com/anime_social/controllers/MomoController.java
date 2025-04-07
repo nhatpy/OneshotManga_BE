@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.anime_social.dto.request.Payment;
 import com.anime_social.dto.response.MomoPaymentResponse;
-import com.anime_social.services.MomoService;
+import com.anime_social.services.interfaces.MomoService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

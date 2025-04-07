@@ -2,7 +2,7 @@ package com.anime_social.controllers;
 
 import com.anime_social.dto.request.UpdateUser;
 import com.anime_social.dto.response.AppResponse;
-import com.anime_social.services.UserService;
+import com.anime_social.services.interfaces.UserService;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

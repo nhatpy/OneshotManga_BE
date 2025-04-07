@@ -13,6 +13,8 @@ import com.anime_social.models.Chapter;
 import com.anime_social.models.Manga;
 import com.anime_social.repositories.ChapterRepository;
 import com.anime_social.repositories.MangaRepository;
+import com.anime_social.services.interfaces.ChapterService;
+import com.anime_social.services.interfaces.NotificationService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +22,12 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ChapterService {
+public class ChapterServiceImpl implements ChapterService {
         private final ChapterRepository chapterRepository;
         private final MangaRepository mangaRepository;
         private final NotificationService notificationService;
 
+        @Override
         public AppResponse createChapter(String mangaId, CreateChapter createChapterRequest) {
                 Manga manga = mangaRepository.findById(mangaId)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
@@ -52,6 +55,7 @@ public class ChapterService {
                                 .build();
         }
 
+        @Override
         public AppResponse updateChapter(String mangaId, Integer chapterNumber, UpdateChapter updateChapterRequest) {
                 Chapter chapter = chapterRepository.findByChapterNumberAndMangaId(mangaId, chapterNumber)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.CHAPTER_NOT_FOUND));
@@ -68,6 +72,7 @@ public class ChapterService {
                                 .build();
         }
 
+        @Override
         public AppResponse deleteChapter(String mangaId, Integer chapterNumber) {
                 Chapter chapter = chapterRepository.findByChapterNumberAndMangaId(mangaId, chapterNumber)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.CHAPTER_NOT_FOUND));
@@ -79,6 +84,7 @@ public class ChapterService {
                                 .build();
         }
 
+        @Override
         public AppResponse getChapterByNumber(String mangaId, Integer chapterNumber) {
                 Chapter chapter = chapterRepository.findByChapterNumberAndMangaId(mangaId, chapterNumber)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.CHAPTER_NOT_FOUND));

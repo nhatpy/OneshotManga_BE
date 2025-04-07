@@ -20,16 +20,18 @@ import com.anime_social.models.UserReadManga;
 import com.anime_social.repositories.MangaRepository;
 import com.anime_social.repositories.UserReadMangaRepository;
 import com.anime_social.repositories.UserRepository;
+import com.anime_social.services.interfaces.HistoryReadService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class HistoryReadService {
+public class HistoryReadServiceImpl implements HistoryReadService {
         private final UserReadMangaRepository userReadMangaRepository;
         private final UserRepository userRepository;
         private final MangaRepository mangaRepository;
 
+        @Override
         public AppResponse checkRead(String userId, String mangaId) {
                 Optional<UserReadManga> userReadManga = userReadMangaRepository.findByUserIdAndMangaId(userId, mangaId);
 
@@ -45,6 +47,7 @@ public class HistoryReadService {
                                 .build();
         }
 
+        @Override
         public AppResponse read(String userId, String mangaId, HistoryReadRequest historyReadRequest) {
                 Optional<UserReadManga> userReadManga = userReadMangaRepository.findByUserIdAndMangaId(userId, mangaId);
 
@@ -76,6 +79,7 @@ public class HistoryReadService {
                                 .build();
         }
 
+        @Override
         public AppResponse reread(String userId, String mangaId, HistoryReadRequest historyReadRequest) {
                 Optional<UserReadManga> userReadManga = userReadMangaRepository.findByUserIdAndMangaId(userId, mangaId);
                 Manga manga = mangaRepository.findById(mangaId)
@@ -100,6 +104,7 @@ public class HistoryReadService {
                                 .build();
         }
 
+        @Override
         public AppResponse unread(String userId, String mangaId) {
                 Optional<UserReadManga> userReadManga = userReadMangaRepository.findByUserIdAndMangaId(userId, mangaId);
 
@@ -115,6 +120,7 @@ public class HistoryReadService {
                                 .build();
         }
 
+        @Override
         public AppResponse getHistoryListMangaPaging(String userId, int page, int size) {
                 int staterPage = page - 1;
                 Pageable pageable = PageRequest.of(staterPage, size);

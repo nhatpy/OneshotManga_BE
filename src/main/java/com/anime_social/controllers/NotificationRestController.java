@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anime_social.dto.response.AppResponse;
-import com.anime_social.services.NotificationService;
+import com.anime_social.services.interfaces.NotificationService;
 
 import lombok.RequiredArgsConstructor;
 

@@ -10,6 +10,5 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AuthenticateResponse {
     String token;
-    long expiredTime;
     UserResponse user;
 }

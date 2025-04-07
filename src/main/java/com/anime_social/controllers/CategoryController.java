@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.anime_social.dto.request.CreateCategory;
 import com.anime_social.dto.request.UpdateCategory;
 import com.anime_social.dto.response.AppResponse;
-import com.anime_social.services.CategoryService;
+import com.anime_social.services.interfaces.CategoryService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

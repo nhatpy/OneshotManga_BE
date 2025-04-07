@@ -2,7 +2,7 @@ package com.anime_social.configurations;
 
 import com.anime_social.dto.request.Introspect;
 import com.anime_social.dto.response.AppResponse;
-import com.anime_social.services.AuthenticationService;
+import com.anime_social.services.interfaces.AuthenticationService;
 import com.nimbusds.jose.JOSEException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

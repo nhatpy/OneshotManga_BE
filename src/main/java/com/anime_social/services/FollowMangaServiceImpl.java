@@ -21,6 +21,7 @@ import com.anime_social.repositories.FollowMangaListMangaRepository;
 import com.anime_social.repositories.FollowMangaListRepository;
 import com.anime_social.repositories.MangaRepository;
 import com.anime_social.repositories.UserRepository;
+import com.anime_social.services.interfaces.FollowMangaService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,12 +29,13 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class FollowMangaService {
+public class FollowMangaServiceImpl implements FollowMangaService {
         private final FollowMangaListMangaRepository followMangaListMangaRepository;
         private final FollowMangaListRepository followMangaListRepository;
         private final MangaRepository mangaRepository;
         private final UserRepository userRepository;
 
+        @Override
         public AppResponse addToFollowList(String mangaId, String userId) {
                 User user = userRepository.findById(userId)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.USER_NOT_FOUND));
@@ -76,6 +78,7 @@ public class FollowMangaService {
                                 .build();
         }
 
+        @Override
         public AppResponse deleteFromFollowList(String mangaId, String userId) {
                 Manga manga = mangaRepository.findById(mangaId)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
@@ -97,6 +100,7 @@ public class FollowMangaService {
                                 .build();
         }
 
+        @Override
         public AppResponse getFollowListPaging(String userId, int page, int size) {
                 int starterPage = page - 1;
                 Pageable pageable = PageRequest.of(starterPage, size);
