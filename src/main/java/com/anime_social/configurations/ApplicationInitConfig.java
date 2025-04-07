@@ -2,7 +2,7 @@ package com.anime_social.configurations;
 
 import com.anime_social.enums.Role;
 import com.anime_social.models.User;
-import com.anime_social.repositorys.UserRepository;
+import com.anime_social.repositories.UserRepository;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;

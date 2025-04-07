@@ -12,9 +12,9 @@ import com.anime_social.exception.ErrorCode;
 import com.anime_social.models.Chapter;
 import com.anime_social.models.Comment;
 import com.anime_social.models.User;
-import com.anime_social.repositorys.ChapterRepository;
-import com.anime_social.repositorys.CommentRepository;
-import com.anime_social.repositorys.UserRepository;
+import com.anime_social.repositories.ChapterRepository;
+import com.anime_social.repositories.CommentRepository;
+import com.anime_social.repositories.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

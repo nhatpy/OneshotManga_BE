@@ -15,7 +15,7 @@ import com.anime_social.dto.response.AppResponse;
 import com.anime_social.exception.CusRunTimeException;
 import com.anime_social.exception.ErrorCode;
 import com.anime_social.models.Category;
-import com.anime_social.repositorys.CategoryRepository;
+import com.anime_social.repositories.CategoryRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class CategoryService {
                 .build();
     }
 
-    @CacheEvict(value = "CATEGORY_CACHE", key = "getCategories")
+    @CacheEvict(value = "CATEGORY_CACHE", key = "'getCategories'")
     public AppResponse createCategory(CreateCategory request) {
         Optional<Category> category = categoryRepository.findByName(request.getName());
         if (category.isPresent()) {
@@ -57,7 +57,7 @@ public class CategoryService {
                 .build();
     }
 
-    @CacheEvict(value = "CATEGORY_CACHE", key = "getCategories")
+    @CacheEvict(value = "CATEGORY_CACHE", key = "'getCategories'")
     public AppResponse updateCategory(String id, UpdateCategory request) {
         Category category = categoryRepository.findById(id).orElse(null);
         if (category == null) {
@@ -76,7 +76,7 @@ public class CategoryService {
                 .build();
     }
 
-    @CacheEvict(value = "CATEGORY_CACHE", key = "getCategories")
+    @CacheEvict(value = "CATEGORY_CACHE", key = "'getCategories'")
     public AppResponse deleteCategory(String id) {
         Category category = categoryRepository.findById(id).orElse(null);
         if (category == null) {

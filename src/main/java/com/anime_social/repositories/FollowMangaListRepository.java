@@ -1,4 +1,4 @@
-package com.anime_social.repositorys;
+package com.anime_social.repositories;
 
 import com.anime_social.models.FollowMangaList;
 import org.springframework.data.jpa.repository.JpaRepository;

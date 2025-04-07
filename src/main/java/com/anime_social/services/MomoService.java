@@ -11,8 +11,8 @@ import com.anime_social.exception.CusRunTimeException;
 import com.anime_social.exception.ErrorCode;
 import com.anime_social.models.PaymentBill;
 import com.anime_social.models.User;
-import com.anime_social.repositorys.PaymentBillRepository;
-import com.anime_social.repositorys.UserRepository;
+import com.anime_social.repositories.PaymentBillRepository;
+import com.anime_social.repositories.UserRepository;
 
 import java.util.Map;
 import java.util.UUID;
@@ -141,6 +141,10 @@ public class MomoService {
                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.PAYMENT_BILL_NOT_FOUND));
         paymentBill.setStatus(Status.SUCCESS.name());
         paymentBillRepository.save(paymentBill);
+        User user = userRepository.findById(orderInfo)
+                .orElseThrow(() -> new CusRunTimeException(ErrorCode.USER_NOT_FOUND));
+        user.setWallet(user.getWallet() + (int) amount);
+        userRepository.save(user);
 
         notificationService.paymentSuccessNotification(orderInfo, requestId, amount);
 

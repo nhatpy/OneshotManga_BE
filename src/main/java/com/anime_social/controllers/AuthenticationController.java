@@ -2,6 +2,7 @@ package com.anime_social.controllers;
 
 import com.anime_social.dto.request.Introspect;
 import com.anime_social.dto.request.Logout;
+import com.anime_social.dto.request.NewPasswordRequest;
 import com.anime_social.dto.request.Register;
 import com.anime_social.dto.request.Authenticate;
 import com.anime_social.dto.request.ChangePasswordRequest;
@@ -71,4 +72,12 @@ public class AuthenticationController {
             @RequestBody @Valid ChangePasswordRequest changePasswordRequest) {
         return authenticationService.resetPassword(userId, changePasswordRequest);
     }
+
+    @PostMapping("/change-password")
+    public AppResponse changePassword(
+            @RequestParam(name = "id") String userId,
+            @RequestBody @Valid NewPasswordRequest newPasswordRequest) {
+        return authenticationService.changePassword(userId, newPasswordRequest);
+    }
+
 }

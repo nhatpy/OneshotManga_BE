@@ -17,9 +17,9 @@ import com.anime_social.exception.CusRunTimeException;
 import com.anime_social.exception.ErrorCode;
 import com.anime_social.models.Notification;
 import com.anime_social.models.User;
-import com.anime_social.repositorys.FollowMangaListMangaRepository;
-import com.anime_social.repositorys.NotificationRepository;
-import com.anime_social.repositorys.UserRepository;
+import com.anime_social.repositories.FollowMangaListMangaRepository;
+import com.anime_social.repositories.NotificationRepository;
+import com.anime_social.repositories.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

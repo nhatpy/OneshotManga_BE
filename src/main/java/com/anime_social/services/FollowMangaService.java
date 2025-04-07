@@ -17,10 +17,10 @@ import com.anime_social.models.FollowMangaList;
 import com.anime_social.models.FollowMangaListManga;
 import com.anime_social.models.Manga;
 import com.anime_social.models.User;
-import com.anime_social.repositorys.FollowMangaListMangaRepository;
-import com.anime_social.repositorys.FollowMangaListRepository;
-import com.anime_social.repositorys.MangaRepository;
-import com.anime_social.repositorys.UserRepository;
+import com.anime_social.repositories.FollowMangaListMangaRepository;
+import com.anime_social.repositories.FollowMangaListRepository;
+import com.anime_social.repositories.MangaRepository;
+import com.anime_social.repositories.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -11,8 +11,8 @@ import com.anime_social.exception.CusRunTimeException;
 import com.anime_social.exception.ErrorCode;
 import com.anime_social.models.Chapter;
 import com.anime_social.models.Manga;
-import com.anime_social.repositorys.ChapterRepository;
-import com.anime_social.repositorys.MangaRepository;
+import com.anime_social.repositories.ChapterRepository;
+import com.anime_social.repositories.MangaRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

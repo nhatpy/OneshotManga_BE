@@ -4,9 +4,10 @@ import com.anime_social.dto.request.UpdateUser;
 import com.anime_social.dto.response.AppResponse;
 import com.anime_social.dto.response.UserResponse;
 import com.anime_social.models.User;
+import com.anime_social.repositories.UserRepository;
 import com.anime_social.exception.CusRunTimeException;
 import com.anime_social.exception.ErrorCode;
-import com.anime_social.repositorys.UserRepository;
+
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -44,7 +45,7 @@ public class UserService {
         }
     }
 
-    @CacheEvict(value = "USER_CACHE", key = "getTopUsers")
+    @CacheEvict(value = "USER_CACHE", key = "'getTopUsers'")
     public AppResponse updateUser(String id, UpdateUser userRequest) {
         Optional<User> user = userRepository.findById(id);
 
@@ -53,22 +54,19 @@ public class UserService {
         } else {
             User userUpdate = user.get();
 
-            userRequest.getFullName().ifPresent(userUpdate::setFullName);
             userRequest.getAvatar().ifPresent(userUpdate::setAvatar);
-            userRequest.getWallet().ifPresent(userUpdate::setWallet);
-            userRequest.getIsWarning().ifPresent(userUpdate::setIsWarning);
 
             userRepository.save(userUpdate);
 
             return AppResponse.builder()
                     .status(HttpStatus.OK)
-                    .message("Cập nhật thông tin người dùng thành công")
+                    .message("Cập nhật thông tin thành công")
                     .data(UserResponse.toUserResponse(userUpdate))
                     .build();
         }
     }
 
-    @CacheEvict(value = "USER_CACHE", key = "getTopUsers")
+    @CacheEvict(value = "USER_CACHE", key = "'getTopUsers'")
     public AppResponse deleteUser(String id) {
         Optional<User> user = userRepository.findById(id);
 
@@ -98,7 +96,7 @@ public class UserService {
                 .build();
     }
 
-    @CacheEvict(value = "USER_CACHE", key = "getTopUsers")
+    @CacheEvict(value = "USER_CACHE", key = "'getTopUsers'")
     public AppResponse warningUser(String id) {
         Optional<User> user = userRepository.findById(id);
 

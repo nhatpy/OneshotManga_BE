@@ -4,7 +4,6 @@ import com.anime_social.dto.request.UpdateUser;
 import com.anime_social.dto.response.AppResponse;
 import com.anime_social.services.UserService;
 
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -34,7 +33,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('USER')")
     @PatchMapping("/update/{id}")
-    public AppResponse updateUser(@PathVariable String id, @RequestBody @Valid UpdateUser userRequest) {
+    public AppResponse updateUser(@PathVariable String id, @RequestBody UpdateUser userRequest) {
         return userService.updateUser(id, userRequest);
     }
 

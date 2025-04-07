@@ -2,6 +2,7 @@ package com.anime_social.services;
 
 import com.anime_social.dto.request.Introspect;
 import com.anime_social.dto.request.Logout;
+import com.anime_social.dto.request.NewPasswordRequest;
 import com.anime_social.dto.request.Register;
 import com.anime_social.dto.request.Authenticate;
 import com.anime_social.dto.request.ChangePasswordRequest;
@@ -14,8 +15,8 @@ import com.anime_social.models.User;
 import com.anime_social.exception.ErrorCode;
 import com.anime_social.exception.CusRunTimeException;
 import com.anime_social.models.VerifyUserCode;
-import com.anime_social.repositorys.UserRepository;
-import com.anime_social.repositorys.VerifyUserCodeRepository;
+import com.anime_social.repositories.UserRepository;
+import com.anime_social.repositories.VerifyUserCodeRepository;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
@@ -58,7 +59,7 @@ public class AuthenticationService {
     @Value("${EXPIRED_TIME}")
     long jwtExpiredTime;
 
-    @CacheEvict(value = "USER_CACHE", allEntries = true)
+    @CacheEvict(value = "USER_CACHE", key = "'getTopUsers'")
     public AppResponse register(Register registerRequest) throws MessagingException {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         Optional<User> existed_user = userRepository.findByEmail(registerRequest.getEmail());
@@ -249,6 +250,24 @@ public class AuthenticationService {
         return AppResponse.builder()
                 .status(HttpStatus.OK)
                 .message("Đặt lại mật khẩu thành công")
+                .build();
+    }
+
+    public AppResponse changePassword(String userId, NewPasswordRequest newPasswordRequest) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CusRunTimeException(ErrorCode.USER_NOT_FOUND));
+
+        if (!passwordEncoder.matches(newPasswordRequest.getCurrentPassword(), user.getPassword())) {
+            throw new CusRunTimeException(ErrorCode.PASSWORD_IS_INCORRECT);
+        }
+
+        user.setPassword(passwordEncoder.encode(newPasswordRequest.getNewPassword()));
+        userRepository.save(user);
+
+        return AppResponse.builder()
+                .status(HttpStatus.OK)
+                .message("Đổi mật khẩu thành công")
                 .build();
     }
 }
