@@ -99,7 +99,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public AppResponse getPaging(int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page, size);
+        int starterPage = page - 1;
+        PageRequest pageRequest = PageRequest.of(starterPage, size);
         List<Category> categories = categoryRepository.findAll(pageRequest).toList();
 
         Integer total = categoryRepository.getNumberOfAll();

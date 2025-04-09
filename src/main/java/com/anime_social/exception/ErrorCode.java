@@ -12,7 +12,7 @@ public enum ErrorCode {
     EMAIL_IS_INVALID("Email không hợp lệ", HttpStatus.BAD_REQUEST),
     PASSWORD_AT_LEAST_6_CHARACTERS("Mật khẩu phải ít nhất 6 ký tự", HttpStatus.BAD_REQUEST),
     INVALID_TOKEN("Token không hợp lệ", HttpStatus.UNAUTHORIZED),
-    UNAUTHORIZED("Chưa đăng nhập", HttpStatus.UNAUTHORIZED),
+    UNAUTHORIZED("Vui lòng xác thực để tiếp tục", HttpStatus.UNAUTHORIZED),
     INVALID_VERIFY_CODE("Code xác thực không hợp lệ", HttpStatus.BAD_REQUEST),
     CATEGORY_ALREADY_EXISTS("Thể loại đã tồn tại", HttpStatus.BAD_REQUEST),
     CATEGORY_NOT_FOUND("Không tìm thấy thể loại", HttpStatus.NOT_FOUND),
