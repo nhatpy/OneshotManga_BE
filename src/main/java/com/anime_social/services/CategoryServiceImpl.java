@@ -69,7 +69,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         request.getName().ifPresent(value -> category.setName(value));
-        request.getName().ifPresent(value -> category.setDescription(value));
+        request.getDescription().ifPresent(value -> category.setDescription(value));
 
         categoryRepository.save(category);
 
