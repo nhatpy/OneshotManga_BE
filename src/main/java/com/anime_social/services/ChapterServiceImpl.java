@@ -28,12 +28,13 @@ public class ChapterServiceImpl implements ChapterService {
         private final NotificationService notificationService;
 
         @Override
-        public AppResponse createChapter(String mangaId, CreateChapter createChapterRequest) {
-                Manga manga = mangaRepository.findById(mangaId)
+        public AppResponse createChapter(String slug, CreateChapter createChapterRequest) {
+                Manga manga = mangaRepository.findBySlug(slug)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
 
                 Chapter chapterExist = chapterRepository
-                                .findByChapterNumberAndMangaId(mangaId, createChapterRequest.getChapterNumber())
+                                .findByChapterNumberAndMangaSlug(
+                                                slug, createChapterRequest.getChapterNumber())
                                 .orElse(null);
                 if (chapterExist != null) {
                         throw new CusRunTimeException(ErrorCode.CHAPTER_ALREADY_EXISTS);
@@ -46,7 +47,7 @@ public class ChapterServiceImpl implements ChapterService {
                                 .build();
                 Chapter savedChapter = chapterRepository.save(chapter);
 
-                notificationService.createChapterNotification(mangaId, manga.getName());
+                notificationService.createChapterNotification(slug, manga.getName());
 
                 return AppResponse.builder()
                                 .status(HttpStatus.CREATED)
@@ -56,12 +57,11 @@ public class ChapterServiceImpl implements ChapterService {
         }
 
         @Override
-        public AppResponse updateChapter(String mangaId, Integer chapterNumber, UpdateChapter updateChapterRequest) {
-                Chapter chapter = chapterRepository.findByChapterNumberAndMangaId(mangaId, chapterNumber)
+        public AppResponse updateChapter(String slug, Integer chapterNumber, UpdateChapter updateChapterRequest) {
+                Chapter chapter = chapterRepository.findByChapterNumberAndMangaSlug(
+                                slug, chapterNumber)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.CHAPTER_NOT_FOUND));
 
-                updateChapterRequest.getChapterNumber()
-                                .ifPresent(newChapterNumber -> chapter.setChapterNumber(newChapterNumber));
                 updateChapterRequest.getContent().ifPresent(content -> chapter.setContent(content));
                 Chapter savedChapter = chapterRepository.save(chapter);
 
@@ -73,8 +73,9 @@ public class ChapterServiceImpl implements ChapterService {
         }
 
         @Override
-        public AppResponse deleteChapter(String mangaId, Integer chapterNumber) {
-                Chapter chapter = chapterRepository.findByChapterNumberAndMangaId(mangaId, chapterNumber)
+        public AppResponse deleteChapter(String slug, Integer chapterNumber) {
+                Chapter chapter = chapterRepository.findByChapterNumberAndMangaSlug(
+                                slug, chapterNumber)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.CHAPTER_NOT_FOUND));
 
                 chapterRepository.delete(chapter);
@@ -85,8 +86,9 @@ public class ChapterServiceImpl implements ChapterService {
         }
 
         @Override
-        public AppResponse getChapterByNumber(String mangaId, Integer chapterNumber) {
-                Chapter chapter = chapterRepository.findByChapterNumberAndMangaId(mangaId, chapterNumber)
+        public AppResponse getChapterByNumber(String slug, Integer chapterNumber) {
+                Chapter chapter = chapterRepository.findByChapterNumberAndMangaSlug(
+                                slug, chapterNumber)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.CHAPTER_NOT_FOUND));
 
                 return AppResponse.builder()

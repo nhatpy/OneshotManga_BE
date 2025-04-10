@@ -80,8 +80,6 @@ public class MangaServiceImpl implements MangaService {
                 Manga manga = mangaRepository.findBySlug(slug)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
 
-                request.getName().ifPresent(manga::setName);
-                request.getSlug().ifPresent(manga::setSlug);
                 request.getIsDone().ifPresent(manga::setIsDone);
                 request.getCoverImg().ifPresent(manga::setCoverImage);
                 request.getDescription().ifPresent(manga::setDescription);
@@ -159,6 +157,25 @@ public class MangaServiceImpl implements MangaService {
                                 .message(type == 1
                                                 ? "Lấy danh sách manga đã kích hoạt thành công"
                                                 : "Lấy danh sách tất cả manga thành công")
+                                .build();
+        }
+
+        @Override
+        public AppResponse getByAuthorId(int page, int size, String authorId) {
+                int staterPage = page - 1;
+                Pageable request = PageRequest.of(staterPage, size);
+
+                List<Manga> mangas = mangaRepository.findAllByAuthorId(authorId, request);
+                List<MangaResponse> mangaResponses = mangas.stream()
+                                .map(MangaResponse::toMangaResponse)
+                                .toList();
+
+                Integer total = mangaRepository.countByAuthorId(authorId).orElse(0);
+                return AppResponse.builder()
+                                .status(HttpStatus.OK)
+                                .totalItem(total)
+                                .data(mangaResponses)
+                                .message("Lấy danh sách manga của tác giả thành công")
                                 .build();
         }
 }

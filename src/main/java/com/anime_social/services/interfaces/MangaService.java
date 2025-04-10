@@ -20,4 +20,6 @@ public interface MangaService {
     public AppResponse bulkActiveManga(BulkActiveRequest bulkActiveRequest);
 
     public AppResponse getMangaPaging(int page, int size, int type);
+
+    public AppResponse getByAuthorId(int page, int size, String authorId);
 }

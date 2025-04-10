@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -22,4 +23,10 @@ public interface MangaRepository extends JpaRepository<Manga, String> {
 
     @Query("SELECT COUNT(m) FROM Manga m")
     Optional<Integer> getNumberOfAll();
+
+    @Query("SELECT m FROM Manga m WHERE m.author.id = :authorId")
+    List<Manga> findAllByAuthorId(@Param("authorId") String authorId, Pageable pageable);
+
+    @Query("SELECT COUNT(m) FROM Manga m WHERE m.author.id = :authorId")
+    Optional<Integer> countByAuthorId(@Param("authorId") String authorId);
 }

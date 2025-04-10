@@ -62,4 +62,13 @@ public class MangaController {
             @RequestParam(required = true) int type) {
         return mangaService.getMangaPaging(page, size, type);
     }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/get/get-by-author/{authorId}")
+    public AppResponse getByAuthorId(
+            @RequestParam(required = true) int page,
+            @RequestParam(required = true) int size,
+            @PathVariable(required = true) String authorId) {
+        return mangaService.getByAuthorId(page, size, authorId);
+    }
 }

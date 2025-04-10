@@ -30,16 +30,24 @@ public class MangaResponse {
         Boolean isDone;
         Boolean isActive;
         String authorName;
-        List<String> categoriesName;
+        List<CategoryOption> categories;
         List<SimpleChapterResponse> chapters;
         Date createAt;
         Date updateAt;
 
         public static MangaResponse toMangaResponse(Manga manga) {
-                List<String> categoriesName = Optional.ofNullable(manga.getCategoryMangas())
+                List<CategoryOption> categories = Optional.ofNullable(manga.getCategoryMangas())
                                 .orElse(Collections.emptyList())
                                 .stream()
-                                .map(categoryManga -> categoryManga.getCategory().getName())
+                                .map(categoryManga -> {
+                                        String categoryName = categoryManga.getCategory().getName();
+                                        String categoryId = categoryManga.getCategory().getId();
+                                        return CategoryOption.builder()
+                                                        .value(categoryId)
+                                                        .label(categoryName)
+                                                        .build();
+
+                                })
                                 .collect(Collectors.toList());
                 List<SimpleChapterResponse> chapters = Optional.ofNullable(manga.getChapters())
                                 .orElse(Collections.emptyList())
@@ -58,7 +66,7 @@ public class MangaResponse {
                                 .isDone(manga.getIsDone())
                                 .isActive(manga.getIsActive())
                                 .authorName(manga.getAuthor().getFullName())
-                                .categoriesName(categoriesName)
+                                .categories(categories)
                                 .chapters(chapters)
                                 .createAt(manga.getCreateAt())
                                 .updateAt(manga.getUpdateAt())

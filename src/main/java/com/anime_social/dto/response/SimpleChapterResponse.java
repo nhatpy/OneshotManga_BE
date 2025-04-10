@@ -17,14 +17,14 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class SimpleChapterResponse {
     Integer chapterNumber;
-    Date createdAt;
-    Date updatedAt;
+    Date createAt;
+    Date updateAt;
 
     public static SimpleChapterResponse toSimpleChapterResponse(Chapter chapter) {
         return SimpleChapterResponse.builder()
                 .chapterNumber(chapter.getChapterNumber())
-                .createdAt(chapter.getCreateAt())
-                .updatedAt(chapter.getUpdateAt())
+                .createAt(chapter.getCreateAt())
+                .updateAt(chapter.getUpdateAt())
                 .build();
     }
 }

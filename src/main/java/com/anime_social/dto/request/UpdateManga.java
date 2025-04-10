@@ -13,8 +13,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateManga {
-    Optional<String> name;
-    Optional<String> slug;
     Optional<String> description;
     Optional<String> coverImg;
     Optional<Boolean> isDone;
