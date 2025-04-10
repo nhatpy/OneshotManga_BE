@@ -19,7 +19,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/chapter/{mangaId}")
+@RequestMapping("/chapter/{slug}")
 @RequiredArgsConstructor
 public class ChapterController {
     private final ChapterService chapterService;
@@ -27,32 +27,32 @@ public class ChapterController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/create")
     public AppResponse createChapter(
-            @PathVariable String mangaId,
+            @PathVariable String slug,
             @RequestBody @Valid CreateChapter createChapterRequest) {
-        return chapterService.createChapter(mangaId, createChapterRequest);
+        return chapterService.createChapter(slug, createChapterRequest);
     }
 
     @PreAuthorize("hasRole('USER')")
     @PatchMapping("/update/{chapterNumber}")
     public AppResponse updateChapter(
-            @PathVariable String mangaId,
+            @PathVariable String slug,
             @PathVariable Integer chapterNumber,
             @RequestBody UpdateChapter updateChapterRequest) {
-        return chapterService.updateChapter(mangaId, chapterNumber, updateChapterRequest);
+        return chapterService.updateChapter(slug, chapterNumber, updateChapterRequest);
     }
 
     @PreAuthorize("hasRole('USER')")
     @DeleteMapping("/delete/{chapterNumber}")
     public AppResponse deleteChapter(
-            @PathVariable String mangaId,
+            @PathVariable String slug,
             @PathVariable Integer chapterNumber) {
-        return chapterService.deleteChapter(mangaId, chapterNumber);
+        return chapterService.deleteChapter(slug, chapterNumber);
     }
 
     @GetMapping("/get/{chapterNumber}")
     public AppResponse getChapter(
-            @PathVariable String mangaId,
+            @PathVariable String slug,
             @PathVariable Integer chapterNumber) {
-        return chapterService.getChapterByNumber(mangaId, chapterNumber);
+        return chapterService.getChapterByNumber(slug, chapterNumber);
     }
 }

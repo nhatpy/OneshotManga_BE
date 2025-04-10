@@ -14,6 +14,5 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateChapter {
-    Optional<Integer> chapterNumber;
     Optional<List<String>> content;
 }

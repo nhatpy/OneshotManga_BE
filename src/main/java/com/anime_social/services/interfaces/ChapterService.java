@@ -8,11 +8,11 @@ import com.anime_social.dto.response.AppResponse;
 
 @Service
 public interface ChapterService {
-    public AppResponse createChapter(String mangaId, CreateChapter createChapterRequest);
+    public AppResponse createChapter(String slug, CreateChapter createChapterRequest);
 
-    public AppResponse updateChapter(String mangaId, Integer chapterNumber, UpdateChapter updateChapterRequest);
+    public AppResponse updateChapter(String slug, Integer chapterNumber, UpdateChapter updateChapterRequest);
 
-    public AppResponse deleteChapter(String mangaId, Integer chapterNumber);
+    public AppResponse deleteChapter(String slug, Integer chapterNumber);
 
-    public AppResponse getChapterByNumber(String mangaId, Integer chapterNumber);
+    public AppResponse getChapterByNumber(String slug, Integer chapterNumber);
 }

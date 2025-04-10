@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ChapterRepository extends JpaRepository<Chapter, String> {
-    @Query("SELECT c FROM Chapter c WHERE c.manga.id = :mangaId AND c.chapterNumber=:chapterNumber")
-    Optional<Chapter> findByChapterNumberAndMangaId(
-            @Param("mangaId") String mangaId,
+    @Query("SELECT c FROM Chapter c WHERE c.manga.slug = :slug AND c.chapterNumber=:chapterNumber")
+    Optional<Chapter> findByChapterNumberAndMangaSlug(
+            @Param("slug") String slug,
             @Param("chapterNumber") Integer chapterNumber);
 }
