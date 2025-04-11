@@ -24,6 +24,9 @@ public class Category extends BaseEntity {
     @Column(name = "name", unique = true)
     String name;
 
+    @Column(name = "slug", unique = true)
+    String slug;
+
     @Column(name = "description", columnDefinition = "LONGTEXT")
     String description;
 

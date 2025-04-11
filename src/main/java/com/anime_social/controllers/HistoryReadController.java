@@ -22,27 +22,12 @@ import lombok.RequiredArgsConstructor;
 public class HistoryReadController {
     private final HistoryReadService historyReadService;
 
-    @GetMapping("/check/{mangaId}")
-    public AppResponse checkRead(
-            @PathVariable String mangaId,
-            @PathVariable String userId) {
-        return historyReadService.checkRead(userId, mangaId);
-    }
-
-    @PostMapping("/read/{mangaId}")
+    @PatchMapping("/read/{mangaId}")
     public AppResponse read(
             @PathVariable String mangaId,
             @PathVariable String userId,
             @RequestBody HistoryReadRequest historyReadRequest) {
         return historyReadService.read(userId, mangaId, historyReadRequest);
-    }
-
-    @PatchMapping("/reread/{mangaId}")
-    public AppResponse reread(
-            @PathVariable String mangaId,
-            @PathVariable String userId,
-            @RequestBody HistoryReadRequest historyReadRequest) {
-        return historyReadService.reread(userId, mangaId, historyReadRequest);
     }
 
     @DeleteMapping("/unread/{mangaId}")

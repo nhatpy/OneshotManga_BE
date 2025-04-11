@@ -12,11 +12,13 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,5 +42,13 @@ public class CommentController {
     @PatchMapping("/update/{id}")
     public AppResponse updateComment(@PathVariable String id, @RequestBody UpdateComment request) {
         return commentService.updateComment(id, request);
+    }
+
+    @GetMapping("/get/{chapterId}")
+    public AppResponse getCommentByChapterId(
+            @PathVariable String chapterId,
+            @RequestParam int page,
+            @RequestParam int size) {
+        return commentService.getCommentByChapterId(chapterId, page, size);
     }
 }

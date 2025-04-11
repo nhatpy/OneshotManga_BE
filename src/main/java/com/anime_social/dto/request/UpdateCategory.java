@@ -14,5 +14,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateCategory {
     Optional<String> name;
+    Optional<String> slug;
     Optional<String> description;
 }

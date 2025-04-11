@@ -59,8 +59,19 @@ public class MangaController {
     public AppResponse getMangaPaging(
             @RequestParam(required = true) int page,
             @RequestParam(required = true) int size,
-            @RequestParam(required = true) int type) {
-        return mangaService.getMangaPaging(page, size, type);
+            @RequestParam(required = true) int type,
+            @RequestParam(required = false) String searchQuery,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(required = false) String categorySlug,
+            @RequestParam(required = false) Boolean status) {
+        return mangaService.getMangaPaging(
+                page,
+                size,
+                type,
+                searchQuery,
+                sortBy,
+                categorySlug,
+                status);
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -70,5 +81,10 @@ public class MangaController {
             @RequestParam(required = true) int size,
             @PathVariable(required = true) String authorId) {
         return mangaService.getByAuthorId(page, size, authorId);
+    }
+
+    @GetMapping("/get/get-top-manga")
+    public AppResponse getTopManga() {
+        return mangaService.getTopDayManga();
     }
 }

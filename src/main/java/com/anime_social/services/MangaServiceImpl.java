@@ -1,10 +1,14 @@
 package com.anime_social.services;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -18,9 +22,11 @@ import com.anime_social.exception.ErrorCode;
 import com.anime_social.models.Category;
 import com.anime_social.models.CategoryManga;
 import com.anime_social.models.Manga;
+import com.anime_social.models.MangaInteraction;
 import com.anime_social.models.User;
 import com.anime_social.repositories.CategoryMangaRepository;
 import com.anime_social.repositories.CategoryRepository;
+import com.anime_social.repositories.MangaInteractionRepository;
 import com.anime_social.repositories.MangaRepository;
 import com.anime_social.repositories.UserRepository;
 import com.anime_social.services.interfaces.MangaService;
@@ -36,6 +42,7 @@ public class MangaServiceImpl implements MangaService {
         private final CategoryMangaRepository categoryMangaRepository;
         private final UserRepository userRepository;
         private final CategoryRepository categoryRepository;
+        private final MangaInteractionRepository mangaInteractionRepository;
 
         @Override
         public AppResponse createManga(PostManga request) {
@@ -135,28 +142,42 @@ public class MangaServiceImpl implements MangaService {
         }
 
         @Override
-        public AppResponse getMangaPaging(int page, int size, int type) {
+        public AppResponse getMangaPaging(
+                        int page,
+                        int size,
+                        int type,
+                        String searchQuery,
+                        String sortBy,
+                        String categorySlug,
+                        Boolean status) {
+                Boolean isActive = null;
                 int staterPage = page - 1;
                 Pageable request = PageRequest.of(staterPage, size);
 
-                List<Manga> mangas = (type == 1)
-                                ? mangaRepository.findAllPagingWithActive(request)
-                                : mangaRepository.findAll(request).toList();
+                if (sortBy != null) {
+                        request = PageRequest.of(staterPage, size, Sort.by(sortBy));
+                }
+
+                if (type == 1) {
+                        isActive = true;
+                } else {
+                        isActive = false;
+                }
+
+                List<Manga> mangas = mangaRepository.findFilterManga(isActive, searchQuery, categorySlug, status,
+                                request);
+                Integer total = mangaRepository.countFilterManga(isActive, searchQuery, categorySlug, status, request)
+                                .orElse(0);
+
                 List<MangaResponse> mangaResponses = mangas.stream()
                                 .map(MangaResponse::toMangaResponse)
                                 .toList();
-
-                Integer total = (type == 1)
-                                ? mangaRepository.getNumberOfAllActive().orElse(0)
-                                : mangaRepository.getNumberOfAll().orElse(0);
 
                 return AppResponse.builder()
                                 .status(HttpStatus.OK)
                                 .totalItem(total)
                                 .data(mangaResponses)
-                                .message(type == 1
-                                                ? "Lấy danh sách manga đã kích hoạt thành công"
-                                                : "Lấy danh sách tất cả manga thành công")
+                                .message("Lấy danh sách manga thành công")
                                 .build();
         }
 
@@ -178,4 +199,27 @@ public class MangaServiceImpl implements MangaService {
                                 .message("Lấy danh sách manga của tác giả thành công")
                                 .build();
         }
+
+        @Override
+        public AppResponse getTopDayManga() {
+                Pageable request = PageRequest.of(0, 5);
+
+                Date startOfDay = Date.from(LocalDate.now()
+                                .atStartOfDay(ZoneId.systemDefault())
+                                .toInstant());
+
+                List<MangaInteraction> mangaInteractions = mangaInteractionRepository.findTopDayManga(startOfDay,
+                                request);
+
+                List<MangaResponse> mangaResponses = mangaInteractions.stream()
+                                .map((mangaInteraction) -> MangaResponse.toMangaResponse(mangaInteraction.getManga()))
+                                .toList();
+
+                return AppResponse.builder()
+                                .status(HttpStatus.OK)
+                                .data(mangaResponses)
+                                .message("Lấy danh sách Top Manga thành công")
+                                .build();
+        }
+
 }

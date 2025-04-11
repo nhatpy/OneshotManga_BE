@@ -13,4 +13,6 @@ public interface CommentService {
     public AppResponse deleteComment(String id);
 
     public AppResponse updateComment(String id, UpdateComment request);
+
+    public AppResponse getCommentByChapterId(String chapterId, int page, int size);
 }

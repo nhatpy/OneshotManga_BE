@@ -15,5 +15,8 @@ public class CreateCategory {
     String name;
 
     @NotEmpty(message = "YOU_MISSING_REQUIRED_FIELD")
+    String slug;
+
+    @NotEmpty(message = "YOU_MISSING_REQUIRED_FIELD")
     String description;
 }

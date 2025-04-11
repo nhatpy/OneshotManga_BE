@@ -49,6 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
         log.info("Create category with request: {}", request);
         Category newCategory = Category.builder()
                 .name(request.getName())
+                .slug(request.getSlug())
                 .description(request.getDescription())
                 .build();
 
@@ -69,6 +70,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         request.getName().ifPresent(value -> category.setName(value));
+        request.getSlug().ifPresent(value -> category.setSlug(value));
         request.getDescription().ifPresent(value -> category.setDescription(value));
 
         categoryRepository.save(category);

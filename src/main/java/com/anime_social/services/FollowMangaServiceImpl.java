@@ -16,9 +16,11 @@ import com.anime_social.exception.ErrorCode;
 import com.anime_social.models.FollowMangaList;
 import com.anime_social.models.FollowMangaListManga;
 import com.anime_social.models.Manga;
+import com.anime_social.models.MangaInteraction;
 import com.anime_social.models.User;
 import com.anime_social.repositories.FollowMangaListMangaRepository;
 import com.anime_social.repositories.FollowMangaListRepository;
+import com.anime_social.repositories.MangaInteractionRepository;
 import com.anime_social.repositories.MangaRepository;
 import com.anime_social.repositories.UserRepository;
 import com.anime_social.services.interfaces.FollowMangaService;
@@ -34,6 +36,7 @@ public class FollowMangaServiceImpl implements FollowMangaService {
         private final FollowMangaListRepository followMangaListRepository;
         private final MangaRepository mangaRepository;
         private final UserRepository userRepository;
+        private final MangaInteractionRepository mangaInteractionRepository;
 
         @Override
         public AppResponse addToFollowList(String mangaId, String userId) {
@@ -41,6 +44,19 @@ public class FollowMangaServiceImpl implements FollowMangaService {
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.USER_NOT_FOUND));
                 Manga manga = mangaRepository.findById(mangaId)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
+
+                MangaInteraction mangaInteraction = mangaInteractionRepository.findById(mangaId)
+                                .orElse(null);
+
+                if (mangaInteraction == null) {
+                        MangaInteraction newMangaInteraction = MangaInteraction.builder()
+                                        .manga(manga)
+                                        .build();
+                        mangaInteractionRepository.save(newMangaInteraction);
+                } else {
+                        mangaInteraction.setTime(mangaInteraction.getTime() + 1);
+                        mangaInteractionRepository.save(mangaInteraction);
+                }
 
                 manga.setFollow(manga.getFollow() + 1);
 

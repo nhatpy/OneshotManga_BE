@@ -16,15 +16,12 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     Optional<User> findByFullName(String fullName);
 
-    @Query("SELECT u FROM User u WHERE u.isVerified = true")
+    @Query("SELECT u FROM User u WHERE u.isVerified = true AND u.fullName != 'admin'")
     List<User> findAllUserVerified(Pageable pageable);
 
-    @Query("SELECT COUNT(u) FROM User u")
-    Optional<Integer> getNumberOfUser();
-
-    @Query("SELECT COUNT(u) FROM User u WHERE u.isVerified = true")
+    @Query("SELECT COUNT(u) FROM User u WHERE u.isVerified = true AND u.fullName != 'admin'")
     Optional<Integer> getNumberOfUserVerified();
 
-    @Query("SELECT u FROM User u WHERE u.isVerified = true ORDER BY u.wallet DESC")
+    @Query("SELECT u FROM User u WHERE u.isVerified = true AND u.fullName != 'admin' ORDER BY u.wallet DESC")
     List<User> findAllTopUser(Pageable pageable);
 }

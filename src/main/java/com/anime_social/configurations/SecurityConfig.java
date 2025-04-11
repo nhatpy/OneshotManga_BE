@@ -29,7 +29,8 @@ public class SecurityConfig {
             "/user/get-top",
             "/manga/get/*",
             "/chapter/*/get/*",
-            "/ws/**"
+            "/ws/**",
+            "/comment/get/*"
     };
     @Autowired
     private CustomJwtDecoder customJwtDecoder;

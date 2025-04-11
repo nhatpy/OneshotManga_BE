@@ -61,4 +61,7 @@ public class Manga extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "author_id", nullable = false)
     User author;
+
+    @OneToOne(mappedBy = "manga", cascade = CascadeType.ALL)
+    MangaInteraction mangaInteraction;
 }

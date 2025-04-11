@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.anime_social.models.Chapter;
 
@@ -24,23 +23,17 @@ public class ChapterResponse {
     Integer chapterNumber;
     List<String> content;
     String mangaSlug;
-    List<CommentResponse> comments;
     Date createAt;
     Date updateAt;
+    Integer numberOfComment;
 
     public static ChapterResponse toChapterResponse(Chapter chapter) {
-        List<CommentResponse> comments = Optional.ofNullable(chapter.getComments())
-                .orElse(Collections.emptyList())
-                .stream()
-                .map(CommentResponse::toCommentResponse)
-                .collect(Collectors.toList());
-
         return ChapterResponse.builder()
                 .id(chapter.getId())
                 .chapterNumber(chapter.getChapterNumber())
                 .content(chapter.getContent())
                 .mangaSlug(chapter.getManga().getSlug())
-                .comments(comments)
+                .numberOfComment(Optional.ofNullable(chapter.getComments()).orElse(Collections.emptyList()).size())
                 .createAt(chapter.getCreateAt())
                 .updateAt(chapter.getUpdateAt())
                 .build();

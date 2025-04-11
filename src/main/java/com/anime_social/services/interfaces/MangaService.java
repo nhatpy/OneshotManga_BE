@@ -19,7 +19,16 @@ public interface MangaService {
 
     public AppResponse bulkActiveManga(BulkActiveRequest bulkActiveRequest);
 
-    public AppResponse getMangaPaging(int page, int size, int type);
+    public AppResponse getMangaPaging(
+            int page,
+            int size,
+            int type,
+            String searchQuery,
+            String sortBy,
+            String categorySlug,
+            Boolean status);
 
     public AppResponse getByAuthorId(int page, int size, String authorId);
+
+    public AppResponse getTopDayManga();
 }

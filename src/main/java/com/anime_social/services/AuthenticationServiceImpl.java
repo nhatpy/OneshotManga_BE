@@ -88,10 +88,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.EMAIL_NOT_FOUND));
 
         if (user.getIsBanned()) {
-            return AppResponse.builder()
-                    .status(HttpStatus.FORBIDDEN)
-                    .message("Tài khoản của bạn đã bị khóa")
-                    .build();
+            throw new CusRunTimeException(ErrorCode.USER_GOT_BAN);
         }
 
         if (!passwordEncoder.matches(authenticateRequest.getPassword(), user.getPassword())) {

@@ -7,11 +7,7 @@ import com.anime_social.dto.response.AppResponse;
 
 @Service
 public interface HistoryReadService {
-    public AppResponse checkRead(String userId, String mangaId);
-
     public AppResponse read(String userId, String mangaId, HistoryReadRequest historyReadRequest);
-
-    public AppResponse reread(String userId, String mangaId, HistoryReadRequest historyReadRequest);
 
     public AppResponse unread(String userId, String mangaId);
 

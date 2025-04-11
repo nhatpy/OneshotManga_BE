@@ -1,5 +1,9 @@
 package com.anime_social.services;
 
+import java.util.List;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -70,6 +74,22 @@ public class CommentServiceImpl implements CommentService {
                                 .status(HttpStatus.OK)
                                 .message("Đã cập nhật bình luận")
                                 .data(CommentResponse.toCommentResponse(commentRepository.save(comment)))
+                                .build();
+        }
+
+        @Override
+        public AppResponse getCommentByChapterId(String chapterId, int page, int size) {
+                int staterPage = page - 1;
+                Pageable pageable = PageRequest.of(staterPage, size);
+                List<Comment> comments = commentRepository.findByChapterId(chapterId, pageable);
+
+                List<CommentResponse> commentResponses = comments.stream()
+                                .map(CommentResponse::toCommentResponse)
+                                .toList();
+                return AppResponse.builder()
+                                .data(commentResponses)
+                                .status(HttpStatus.OK)
+                                .message("Lấy bình luận thành công")
                                 .build();
         }
 }
