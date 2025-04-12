@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.anime_social.dto.request.PostComment;
-import com.anime_social.dto.request.UpdateComment;
 import com.anime_social.dto.response.AppResponse;
 import com.anime_social.dto.response.CommentResponse;
 import com.anime_social.exception.CusRunTimeException;
@@ -64,31 +64,21 @@ public class CommentServiceImpl implements CommentService {
         }
 
         @Override
-        public AppResponse updateComment(String id, UpdateComment request) {
-                Comment comment = commentRepository.findById(id)
-                                .orElseThrow(() -> new CusRunTimeException(ErrorCode.COMMENT_NOT_FOUND));
-
-                request.getContent().ifPresent(comment::setContent);
-
-                return AppResponse.builder()
-                                .status(HttpStatus.OK)
-                                .message("Đã cập nhật bình luận")
-                                .data(CommentResponse.toCommentResponse(commentRepository.save(comment)))
-                                .build();
-        }
-
-        @Override
         public AppResponse getCommentByChapterId(String chapterId, int page, int size) {
                 int staterPage = page - 1;
-                Pageable pageable = PageRequest.of(staterPage, size);
+                Pageable pageable = PageRequest.of(staterPage, size).withSort(Sort.by("createAt").descending());
                 List<Comment> comments = commentRepository.findByChapterId(chapterId, pageable);
 
                 List<CommentResponse> commentResponses = comments.stream()
                                 .map(CommentResponse::toCommentResponse)
                                 .toList();
+
+                Integer totalComment = commentRepository.countByChapterId(chapterId).orElse(0);
+
                 return AppResponse.builder()
                                 .data(commentResponses)
                                 .status(HttpStatus.OK)
+                                .totalItem(totalComment)
                                 .message("Lấy bình luận thành công")
                                 .build();
         }

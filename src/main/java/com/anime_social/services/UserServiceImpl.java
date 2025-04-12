@@ -18,6 +18,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -136,7 +137,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public AppResponse getUsersPaging(int page, int size) {
         int starterPage = page - 1;
-        Pageable pageable = PageRequest.of(starterPage, size);
+        Pageable pageable = PageRequest.of(starterPage, size).withSort(Sort.by("createAt").descending());
         List<User> users = userRepository.findAllUserVerified(pageable);
 
         List<UserResponse> userResponses = users.stream()
@@ -155,8 +156,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Cacheable(value = "USER_CACHE", key = "#root.methodName")
     public AppResponse getTopUsers() {
-        Pageable pageable = PageRequest
-                .ofSize(7);
+        Pageable pageable = PageRequest.ofSize(7).withSort(Sort.by("wallet").descending());
 
         List<User> users = userRepository.findAllTopUser(pageable);
 

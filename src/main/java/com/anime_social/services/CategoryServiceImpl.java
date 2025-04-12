@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Cacheable(value = "CATEGORY_CACHE", key = "#root.methodName")
     public AppResponse getCategories() {
-        List<Category> categories = categoryRepository.findAll();
+        List<Category> categories = categoryRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
         return AppResponse.builder()
                 .status(HttpStatus.OK)
                 .message("Lấy danh sách thể loại thành công")
@@ -102,8 +104,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public AppResponse getPaging(int page, int size) {
         int starterPage = page - 1;
-        PageRequest pageRequest = PageRequest.of(starterPage, size);
-        List<Category> categories = categoryRepository.findAll(pageRequest).toList();
+        Pageable pageable = PageRequest.of(starterPage, size).withSort(Sort.by("createAt").descending());
+        List<Category> categories = categoryRepository.findAll(pageable).toList();
 
         Integer total = categoryRepository.getNumberOfAll();
 

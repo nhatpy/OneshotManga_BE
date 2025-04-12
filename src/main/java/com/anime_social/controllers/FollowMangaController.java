@@ -19,6 +19,13 @@ import lombok.RequiredArgsConstructor;
 public class FollowMangaController {
     private final FollowMangaService followMangaService;
 
+    @GetMapping("/check/{mangaId}")
+    public boolean checkFollowManga(
+            @PathVariable String mangaId,
+            @PathVariable String userId) {
+        return followMangaService.checkFollowManga(mangaId, userId);
+    }
+
     @PostMapping("/{mangaId}")
     public AppResponse addToFollowList(
             @PathVariable String mangaId,

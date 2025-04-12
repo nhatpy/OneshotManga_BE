@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.anime_social.dto.response.AppResponse;
-import com.anime_social.dto.response.FollowListMangaResponse;
+import com.anime_social.dto.response.MangaResponse;
 import com.anime_social.exception.CusRunTimeException;
 import com.anime_social.exception.ErrorCode;
 import com.anime_social.models.FollowMangaList;
@@ -69,28 +69,26 @@ public class FollowMangaServiceImpl implements FollowMangaService {
 
                         FollowMangaList savedList = followMangaListRepository.save(newFollowMangaList);
 
-                        FollowMangaListManga savedFollowMangaListManga = followMangaListMangaRepository
-                                        .save(FollowMangaListManga.builder()
-                                                        .followMangaList(savedList)
-                                                        .manga(mangaRepository.save(manga))
-                                                        .build());
+                        followMangaListMangaRepository.save(FollowMangaListManga.builder()
+                                        .followMangaList(savedList)
+                                        .manga(mangaRepository.save(manga))
+                                        .build());
 
                         return AppResponse.builder()
                                         .status(HttpStatus.OK)
                                         .message("Thêm vào danh sách theo dõi thành công")
-                                        .data(FollowListMangaResponse.toFollowListResponse(savedFollowMangaListManga))
+                                        .data(MangaResponse.toMangaResponse(manga))
                                         .build();
                 }
-                FollowMangaListManga savedFollowMangaListManga = followMangaListMangaRepository
-                                .save(FollowMangaListManga.builder()
-                                                .followMangaList(followMangaList.get())
-                                                .manga(mangaRepository.save(manga))
-                                                .build());
+                followMangaListMangaRepository.save(FollowMangaListManga.builder()
+                                .followMangaList(followMangaList.get())
+                                .manga(mangaRepository.save(manga))
+                                .build());
 
                 return AppResponse.builder()
                                 .status(HttpStatus.OK)
                                 .message("Thêm vào danh sách theo dõi thành công")
-                                .data(FollowListMangaResponse.toFollowListResponse(savedFollowMangaListManga))
+                                .data(MangaResponse.toMangaResponse(manga))
                                 .build();
         }
 
@@ -112,7 +110,7 @@ public class FollowMangaServiceImpl implements FollowMangaService {
 
                 return AppResponse.builder()
                                 .status(HttpStatus.OK)
-                                .message("Xóa khỏi danh sách theo dõi thành công")
+                                .message("Đã xóa khỏi danh sách theo dõi")
                                 .build();
         }
 
@@ -124,8 +122,9 @@ public class FollowMangaServiceImpl implements FollowMangaService {
                 List<FollowMangaListManga> followMangaListMangas = followMangaListMangaRepository
                                 .findMangainListByFollowMangaListIdPaging(userId, pageable);
 
-                List<FollowListMangaResponse> followListMangaResponses = followMangaListMangas.stream()
-                                .map(FollowListMangaResponse::toFollowListResponse)
+                List<MangaResponse> mangaResponses = followMangaListMangas.stream()
+                                .map((followMangaListManga) -> MangaResponse
+                                                .toMangaResponse(followMangaListManga.getManga()))
                                 .collect(Collectors.toList());
 
                 Integer total = followMangaListMangaRepository.countMangaInListByFollowListId(userId)
@@ -133,10 +132,21 @@ public class FollowMangaServiceImpl implements FollowMangaService {
 
                 return AppResponse.builder()
                                 .status(HttpStatus.OK)
-                                .data(followListMangaResponses)
+                                .data(mangaResponses)
                                 .totalItem(total)
                                 .message("Lấy danh sách theo dõi thành công")
                                 .build();
+        }
+
+        @Override
+        public boolean checkFollowManga(String mangaId, String userId) {
+                Optional<FollowMangaListManga> followMangaListManga = followMangaListMangaRepository
+                                .findByFollowMangaListIdAndMangaId(userId, mangaId);
+
+                if (followMangaListManga.isPresent()) {
+                        return true;
+                }
+                return false;
         }
 
 }

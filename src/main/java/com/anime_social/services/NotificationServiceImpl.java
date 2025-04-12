@@ -66,7 +66,7 @@ public class NotificationServiceImpl implements NotificationService {
         @Override
         public AppResponse getNotifications(String userId, int page, int size) {
                 int starterPage = page - 1;
-                Pageable pageable = PageRequest.of(starterPage, size, Sort.by("type").ascending());
+                Pageable pageable = PageRequest.of(starterPage, size).withSort(Sort.by("createAt").descending());
                 List<Notification> notifications = notificationRepository.findByUserIdAndSort(userId, pageable);
 
                 List<NotificationResponse> notificationResponses = notifications.stream()

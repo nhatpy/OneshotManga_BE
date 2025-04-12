@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -106,7 +107,7 @@ public class HistoryReadServiceImpl implements HistoryReadService {
         @Override
         public AppResponse getHistoryListMangaPaging(String userId, int page, int size) {
                 int staterPage = page - 1;
-                Pageable pageable = PageRequest.of(staterPage, size);
+                Pageable pageable = PageRequest.of(staterPage, size).withSort(Sort.by("lastReadAtDate").descending());
 
                 Integer total = userReadMangaRepository.countByUserIdAndMangaId(userId).orElse(0);
                 List<UserReadManga> userReadMangas = userReadMangaRepository.findAllByUserIdPaging(userId, pageable);

@@ -18,11 +18,14 @@ import com.anime_social.services.interfaces.MangaService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/manga")
 @RequiredArgsConstructor
+@Slf4j
 public class MangaController {
     private final MangaService mangaService;
 
@@ -64,6 +67,8 @@ public class MangaController {
             @RequestParam(required = false) String sortBy,
             @RequestParam(required = false) String categorySlug,
             @RequestParam(required = false) Boolean status) {
+        log.info("getMangaPaging: page={}, size={}, type={}, searchQuery={}, sortBy={}, categorySlug={}, status={}",
+                page, size, type, searchQuery, sortBy, categorySlug, status);
         return mangaService.getMangaPaging(
                 page,
                 size,

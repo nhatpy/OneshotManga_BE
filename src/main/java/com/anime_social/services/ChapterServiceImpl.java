@@ -1,5 +1,9 @@
 package com.anime_social.services;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -49,9 +53,16 @@ public class ChapterServiceImpl implements ChapterService {
 
                 notificationService.createChapterNotification(slug, manga.getName());
 
+                Sort sort = Sort.by(Sort.Direction.DESC, "chapterNumber");
+                List<Chapter> chapters = chapterRepository.findByMangaSlug(slug, sort);
+
+                List<Integer> numberOfChapter = chapters.stream()
+                                .map(Chapter::getChapterNumber)
+                                .collect(Collectors.toList());
+
                 return AppResponse.builder()
                                 .status(HttpStatus.CREATED)
-                                .data(ChapterResponse.toChapterResponse(savedChapter))
+                                .data(ChapterResponse.toChapterResponse(savedChapter, numberOfChapter))
                                 .message("Tạo chapter thành công")
                                 .build();
         }
@@ -65,9 +76,15 @@ public class ChapterServiceImpl implements ChapterService {
                 updateChapterRequest.getContent().ifPresent(content -> chapter.setContent(content));
                 Chapter savedChapter = chapterRepository.save(chapter);
 
+                Sort sort = Sort.by(Sort.Direction.DESC, "chapterNumber");
+                List<Chapter> chapters = chapterRepository.findByMangaSlug(slug, sort);
+
+                List<Integer> numberOfChapter = chapters.stream()
+                                .map(Chapter::getChapterNumber)
+                                .collect(Collectors.toList());
                 return AppResponse.builder()
                                 .status(HttpStatus.OK)
-                                .data(ChapterResponse.toChapterResponse(savedChapter))
+                                .data(ChapterResponse.toChapterResponse(savedChapter, numberOfChapter))
                                 .message("Cập nhật chapter thành công")
                                 .build();
         }
@@ -91,9 +108,16 @@ public class ChapterServiceImpl implements ChapterService {
                                 slug, chapterNumber)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.CHAPTER_NOT_FOUND));
 
+                Sort sort = Sort.by(Sort.Direction.DESC, "chapterNumber");
+                List<Chapter> chapters = chapterRepository.findByMangaSlug(slug, sort);
+
+                List<Integer> numberOfChapter = chapters.stream()
+                                .map(Chapter::getChapterNumber)
+                                .collect(Collectors.toList());
+
                 return AppResponse.builder()
                                 .status(HttpStatus.OK)
-                                .data(ChapterResponse.toChapterResponse(chapter))
+                                .data(ChapterResponse.toChapterResponse(chapter, numberOfChapter))
                                 .message("Lấy chapter theo số tập thành công")
                                 .build();
         }

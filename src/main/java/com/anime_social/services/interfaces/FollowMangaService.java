@@ -12,4 +12,5 @@ public interface FollowMangaService {
 
     public AppResponse getFollowListPaging(String userId, int page, int size);
 
+    public boolean checkFollowManga(String mangaId, String userId);
 }

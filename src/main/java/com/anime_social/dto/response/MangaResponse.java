@@ -1,6 +1,7 @@
 package com.anime_social.dto.response;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -53,6 +54,9 @@ public class MangaResponse {
                                 .orElse(Collections.emptyList())
                                 .stream()
                                 .map(SimpleChapterResponse::toSimpleChapterResponse)
+                                .sorted(Comparator.comparing(
+                                                (SimpleChapterResponse chapter) -> chapter.getChapterNumber())
+                                                .reversed())
                                 .collect(Collectors.toList());
 
                 return MangaResponse.builder()

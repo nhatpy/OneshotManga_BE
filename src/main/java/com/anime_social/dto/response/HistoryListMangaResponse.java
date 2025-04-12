@@ -16,14 +16,12 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class HistoryListMangaResponse {
-    String userId;
     Date lastReadAtDate;
     Integer lastReadAtChapter;
     MangaResponse manga;
 
     public static HistoryListMangaResponse toHistoryListResponse(UserReadManga userReadManga) {
         return HistoryListMangaResponse.builder()
-                .userId(userReadManga.getUser().getId())
                 .lastReadAtDate(userReadManga.getLastReadAtDate())
                 .lastReadAtChapter(userReadManga.getLastReadAtChapter())
                 .manga(MangaResponse.toMangaResponse(userReadManga.getManga()))

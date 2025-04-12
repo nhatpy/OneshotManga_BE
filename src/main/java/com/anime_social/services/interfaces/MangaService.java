@@ -31,4 +31,6 @@ public interface MangaService {
     public AppResponse getByAuthorId(int page, int size, String authorId);
 
     public AppResponse getTopDayManga();
+
+    public void updateMangaInteraction(String mangaId);
 }
