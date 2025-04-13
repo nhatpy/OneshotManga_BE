@@ -37,29 +37,30 @@ public class HistoryReadServiceImpl implements HistoryReadService {
 
         @Override
         public AppResponse read(String userId, String mangaId, HistoryReadRequest historyReadRequest) {
-                UserReadManga userReadManga = userReadMangaRepository.findByUserIdAndMangaId(userId, mangaId)
-                                .orElse(null);
-
-                User user = userRepository.findById(userId)
-                                .orElseThrow(() -> new CusRunTimeException(ErrorCode.USER_NOT_FOUND));
                 Manga manga = mangaRepository.findById(mangaId)
                                 .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
 
                 manga.setView(manga.getView() + 1);
                 Manga savedManga = mangaRepository.save(manga);
-                MangaInteraction mangaInteraction = mangaInteractionRepository.findById(mangaId)
-                                .orElse(null);
+                Optional<MangaInteraction> mangaInteraction = mangaInteractionRepository.findById(mangaId);
 
-                if (mangaInteraction == null) {
+                if (mangaInteraction.isEmpty()) {
                         MangaInteraction newMangaInteraction = MangaInteraction.builder()
                                         .manga(manga)
                                         .build();
                         mangaInteractionRepository.save(newMangaInteraction);
-                } else {
-                        mangaInteraction.setTime(mangaInteraction.getTime() + 1);
-                        mangaInteractionRepository.save(mangaInteraction);
                 }
-                if (userReadManga == null) {
+                if (mangaInteraction.isPresent()) {
+                        MangaInteraction mangaInteraction2 = mangaInteraction.get();
+                        mangaInteraction2.setTime(mangaInteraction2.getTime() + 1);
+                        mangaInteractionRepository.save(mangaInteraction2);
+                }
+
+                User user = userRepository.findById(userId)
+                                .orElseThrow(() -> new CusRunTimeException(ErrorCode.USER_NOT_FOUND));
+                Optional<UserReadManga> userReadManga = userReadMangaRepository.findByUserIdAndMangaId(userId, mangaId);
+
+                if (userReadManga.isEmpty()) {
                         UserReadManga saveUserReadManga = UserReadManga.builder()
                                         .user(user)
                                         .manga(savedManga)
@@ -74,11 +75,13 @@ public class HistoryReadServiceImpl implements HistoryReadService {
                                         .data(HistoryListMangaResponse.toHistoryListResponse(history))
                                         .message("Đã thêm vào lịch sử theo dõi")
                                         .build();
-                } else {
-                        userReadManga.setLastReadAtChapter(historyReadRequest.getReadChapter());
-                        userReadManga.setLastReadAtDate(historyReadRequest.getReadDate());
+                }
+                if (mangaInteraction.isPresent()) {
+                        UserReadManga userReadManga2 = userReadManga.get();
+                        userReadManga2.setLastReadAtChapter(historyReadRequest.getReadChapter());
+                        userReadManga2.setLastReadAtDate(historyReadRequest.getReadDate());
 
-                        UserReadManga savedHistory = userReadMangaRepository.save(userReadManga);
+                        UserReadManga savedHistory = userReadMangaRepository.save(userReadManga2);
 
                         return AppResponse.builder()
                                         .status(HttpStatus.OK)
@@ -86,6 +89,7 @@ public class HistoryReadServiceImpl implements HistoryReadService {
                                         .message("Đã cập nhật lịch sử theo dõi")
                                         .build();
                 }
+                throw new CusRunTimeException(ErrorCode.ERROR_IS_UNCATEGORIZED);
         }
 
         @Override

@@ -51,7 +51,7 @@ public class ChapterServiceImpl implements ChapterService {
                                 .build();
                 Chapter savedChapter = chapterRepository.save(chapter);
 
-                notificationService.createChapterNotification(slug, manga.getName());
+                notificationService.createChapterNotification(manga.getId(), manga.getName());
 
                 Sort sort = Sort.by(Sort.Direction.DESC, "chapterNumber");
                 List<Chapter> chapters = chapterRepository.findByMangaSlug(slug, sort);

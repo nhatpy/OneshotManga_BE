@@ -1,6 +1,7 @@
 package com.anime_social.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
@@ -253,8 +254,8 @@ public class MangaServiceImpl implements MangaService {
 
         @Override
         public void updateMangaInteraction(String mangaId) {
-                MangaInteraction mangaInteraction = mangaInteractionRepository.findById(mangaId).orElse(null);
-                if (mangaInteraction == null) {
+                Optional<MangaInteraction> mangaInteraction = mangaInteractionRepository.findById(mangaId);
+                if (mangaInteraction.isEmpty()) {
                         Manga manga = mangaRepository.findById(mangaId)
                                         .orElseThrow(() -> new CusRunTimeException(ErrorCode.MANGA_NOT_FOUND));
                         manga.setView(manga.getView() + 1);
@@ -264,13 +265,16 @@ public class MangaServiceImpl implements MangaService {
                                         .manga(manga)
                                         .build();
                         mangaInteractionRepository.save(newMangaInteraction);
-                } else {
-                        Manga manga = mangaInteraction.getManga();
+                }
+                if (mangaInteraction.isPresent()) {
+                        MangaInteraction mangaInteraction2 = mangaInteraction.get();
+
+                        Manga manga = mangaInteraction2.getManga();
                         manga.setView(manga.getView() + 1);
                         mangaRepository.save(manga);
 
-                        mangaInteraction.setTime(mangaInteraction.getTime() + 1);
-                        mangaInteractionRepository.save(mangaInteraction);
+                        mangaInteraction2.setTime(mangaInteraction2.getTime() + 1);
+                        mangaInteractionRepository.save(mangaInteraction2);
                 }
         }
 }

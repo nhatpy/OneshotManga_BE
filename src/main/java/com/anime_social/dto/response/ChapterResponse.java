@@ -22,6 +22,7 @@ public class ChapterResponse {
     String id;
     Integer chapterNumber;
     List<String> content;
+    String mangaId;
     String mangaSlug;
     String mangaName;
     List<Integer> numberOfChapter;
@@ -34,6 +35,7 @@ public class ChapterResponse {
                 .id(chapter.getId())
                 .chapterNumber(chapter.getChapterNumber())
                 .content(chapter.getContent())
+                .mangaId(chapter.getManga().getId())
                 .mangaSlug(chapter.getManga().getSlug())
                 .mangaName(chapter.getManga().getName())
                 .numberOfComment(Optional.ofNullable(chapter.getComments()).orElse(Collections.emptyList()).size())

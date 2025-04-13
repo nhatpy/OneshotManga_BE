@@ -1,5 +1,6 @@
 package com.anime_social.controllers;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,5 +24,11 @@ public class NotificationRestController {
             @RequestParam int page,
             @RequestParam int size) {
         return notificationService.getNotifications(userId, page, size);
+    }
+
+    @DeleteMapping("/{notificationId}")
+    public void deleteNotification(
+            @PathVariable String notificationId) {
+        notificationService.deleteNotification(notificationId);
     }
 }

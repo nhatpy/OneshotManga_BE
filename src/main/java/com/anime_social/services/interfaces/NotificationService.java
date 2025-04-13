@@ -11,4 +11,6 @@ public interface NotificationService {
     public void paymentSuccessNotification(String userId, String paymentId, long amount);
 
     public AppResponse getNotifications(String userId, int page, int size);
+
+    public void deleteNotification(String notificationId);
 }

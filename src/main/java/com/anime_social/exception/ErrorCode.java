@@ -27,6 +27,7 @@ public enum ErrorCode {
     MANGA_ALREADY_EXISTS("Truyện đã tồn tại", HttpStatus.BAD_REQUEST),
     CHAPTER_ALREADY_EXISTS("Chapter đã tồn tại", HttpStatus.BAD_REQUEST),
     USER_GOT_BAN("Tài khoản đã bị khóa", HttpStatus.FORBIDDEN),
+    NOTIFICATION_NOT_FOUND("Thông báo không tồn tại", HttpStatus.NOT_FOUND),
     ;
 
     String message;

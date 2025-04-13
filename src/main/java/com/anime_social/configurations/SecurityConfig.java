@@ -31,7 +31,8 @@ public class SecurityConfig {
             "/chapter/*/get/*",
             "/ws/**",
             "/comment/get/*",
-            "/interaction/**"
+            "/interaction/**",
+            "/notification/**",
     };
     @Autowired
     private CustomJwtDecoder customJwtDecoder;

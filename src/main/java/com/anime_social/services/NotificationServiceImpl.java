@@ -82,4 +82,11 @@ public class NotificationServiceImpl implements NotificationService {
                                 .data(notificationResponses)
                                 .build();
         }
+
+        @Override
+        public void deleteNotification(String notificationId) {
+                Notification notification = notificationRepository.findById(notificationId)
+                                .orElseThrow(() -> new CusRunTimeException(ErrorCode.NOTIFICATION_NOT_FOUND));
+                notificationRepository.delete(notification);
+        }
 }
