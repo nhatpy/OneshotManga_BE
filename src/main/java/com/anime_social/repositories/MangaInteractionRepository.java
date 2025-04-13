@@ -1,6 +1,7 @@
 package com.anime_social.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,5 +18,10 @@ public interface MangaInteractionRepository extends JpaRepository<MangaInteracti
                         """)
         List<MangaInteraction> findTopDayManga(
                         Pageable pageable);
+
+        @Query("""
+                        SELECT COUNT(mi) FROM MangaInteraction mi
+                        """)
+        Optional<Integer> countTopDayManga();
 
 }
