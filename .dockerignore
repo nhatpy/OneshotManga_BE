@@ -1,0 +1,26 @@
+# Ignore Maven/Gradle output
+target/
+build/
+
+# IDE configs
+.idea/
+*.iml
+*.ipr
+*.iws
+*.log
+
+#VS Code
+.vscode/
+.vscode-test/
+
+# OS junk files
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+#env
+*.env
+*.env.*
