@@ -1,0 +1,46 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oneshotmanga
+    ports:
+      - "8080:8080"
+    env_file:
+      - ./.env
+    environment:
+      - DB_HOST=mysql
+      - REDIS_HOST=redis
+    restart: always
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - app-network
+  mysql:
+    image: mysql:8.0.41-debian
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+  redis:
+    image: redis:bookworm
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local

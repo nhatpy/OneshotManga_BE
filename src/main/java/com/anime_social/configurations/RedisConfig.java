@@ -15,10 +15,10 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @RequiredArgsConstructor
 public class RedisConfig {
-    @Value("${spring.data.redis.host:localhost}")
+    @Value("${REDIS_HOST}")
     private String redisHost;
 
-    @Value("${spring.data.redis.port:6379}")
+    @Value("${REDIS_PORT}")
     private String redisPort;
 
     @Bean
