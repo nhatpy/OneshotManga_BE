@@ -94,4 +94,14 @@ public interface MangaRepository extends JpaRepository<Manga, String> {
                         @Param("categorySlug") String categorySlug,
                         @Param("status") Boolean status,
                         Pageable pageable);
+
+        @Query("""
+                        SELECT DISTINCT m.name
+                        FROM Manga m
+                        LEFT JOIN m.categoryMangas cm
+                        LEFT JOIN cm.category c
+                        WHERE c.name IN :genres
+                        """)
+        List<String> findTop5MangaTitlesByGenres(@Param("genres") List<String> genres, Pageable pageable);
+
 }

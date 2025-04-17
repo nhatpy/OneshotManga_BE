@@ -11,10 +11,11 @@ services:
     environment:
       - DB_HOST=mysql
       - REDIS_HOST=redis
-    restart: always
+      - OLLAMA_HOST=ollama
     depends_on:
       - mysql
       - redis
+      - ollama
     networks:
       - app-network
   mysql:
@@ -36,6 +37,22 @@ services:
       - "6379:6379"
     networks:
       - app-network
+  ollama:
+    image: ollama/ollama:rocm
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - app-network
+    entrypoint: /bin/sh
+    command: -c "
+      ollama serve & 
+      sleep 3 && 
+      ollama list | grep -q 'mistral' || ollama pull mistral && 
+      wait 
+      "
 
 networks:
   app-network:
@@ -43,4 +60,6 @@ networks:
 
 volumes:
   mysql_data:
+    driver: local
+  ollama_data:
     driver: local

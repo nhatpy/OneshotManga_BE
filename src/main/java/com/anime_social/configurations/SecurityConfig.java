@@ -30,6 +30,11 @@ public class SecurityConfig {
     private String feProdUrl;
 
     private final String[] PUBLIC_ENDPOINTS = {
+            "/v3/api-docs/**",
+            "/v3/api-docs.yaml",
+            "/swagger-resources/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
             "/auth/*",
             "/category/get-all",
             "/user/get-top",
@@ -39,6 +44,7 @@ public class SecurityConfig {
             "/comment/get/*",
             "/interaction/**",
             "/notification/**",
+            "/chatbot/**",
     };
     @Autowired
     private CustomJwtDecoder customJwtDecoder;

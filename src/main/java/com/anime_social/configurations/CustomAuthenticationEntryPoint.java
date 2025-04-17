@@ -13,10 +13,12 @@ import java.io.IOException;
 
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
-    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
+    public void commence(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException authException)
             throws IOException, ServletException {
         ErrorCode errorCode = ErrorCode.UNAUTHORIZED;
 
+        response.setHeader("Content-Type", "application/json;charset=UTF-8");
         response.setStatus(errorCode.getHttpStatus().value());
         response.setContentType("application/json");
         AppResponse appResponse = AppResponse.builder()
