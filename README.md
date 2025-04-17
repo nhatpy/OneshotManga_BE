@@ -1,5 +1,5 @@
 # Oneshot Manga - Backend Service 
-Backend service for the FoodSpot Management System, a comprehensive platform for restaurant discovery and management in Vietnam.
+Backend service for the Oneshot Mangaa - website for whom love reading manga, manhua, manhwa and more.
 
 ## 📚 Related Repositories
 
@@ -12,6 +12,7 @@ Backend service for the FoodSpot Management System, a comprehensive platform for
 - Real-time Notifications with Websocket
 - Payment Integration with Momo UAT
 - Mail Service by using SMTP
+- Chatbot with Ollama
 
 ## 🛠️ Technology Stack
 
@@ -26,6 +27,7 @@ Backend service for the FoodSpot Management System, a comprehensive platform for
 - **Cloudinary**: Media storage
 - **Java Mail Sender**: Email service
 - **Momo UAT**: Payment service
+- **Ollama**: LLM for suggestion
 
 ### Development Tools
 - **Docker & Docker Compose**
@@ -105,7 +107,7 @@ resources/
 2. Set environment variables for sensitive data
 3. Build the Docker image
 ```bash
-docker build -t foodie-connect .
+docker build -t anime-social .
 ```
 
 ### Environment Variables
