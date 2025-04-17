@@ -71,4 +71,7 @@ public class User extends BaseEntity {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     VerifyUserCode verifyUserCode;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    List<ChatbotHistory> chatbotHistories;
 }

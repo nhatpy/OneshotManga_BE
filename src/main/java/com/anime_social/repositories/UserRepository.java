@@ -2,6 +2,8 @@ package com.anime_social.repositories;
 
 import com.anime_social.models.User;
 
+import lombok.NonNull;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -27,4 +29,6 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @Query("SELECT COUNT(u) FROM User u WHERE u.isVerified = true AND u.fullName != 'admin' AND u.wallet != 0")
     Optional<Integer> getNumberOfTopUserVerified();
+
+    boolean existsById(@NonNull String id);
 }
