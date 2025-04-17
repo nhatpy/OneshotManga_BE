@@ -1,5 +1,6 @@
 package com.anime_social.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
@@ -16,7 +17,6 @@ import com.anime_social.repositories.ChatbotRepository;
 import com.anime_social.repositories.MangaRepository;
 import com.anime_social.repositories.UserRepository;
 import com.anime_social.services.interfaces.ChatbotService;
-import com.anime_social.services.interfaces.OllamaService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,13 +24,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ChatbotServiceImpl implements ChatbotService {
     private final ChatbotRepository chatbotRepository;
-    private final OllamaService ollamaService;
     private final MangaRepository mangaRepository;
     private final UserRepository userRepository;
 
     @Override
     public List<String> getHistory(String userId) {
-        Pageable pageable = PageRequest.of(0, 3).withSort(Sort.by(Sort.Direction.DESC, "createAt"));
+        Pageable pageable = PageRequest.of(0, 2).withSort(Sort.by(Sort.Direction.DESC, "createAt"));
         return chatbotRepository.findAll(pageable).stream()
                 .map(chatbotHistory -> chatbotHistory.getMessage())
                 .toList();
@@ -38,18 +37,13 @@ public class ChatbotServiceImpl implements ChatbotService {
 
     @Override
     public String sendMessage(ChatbotRequest chatbotRequest) {
-        ChatbotHistory chatbotHistory = chatbotRepository.findByMessage(chatbotRequest.getMessage());
-        if (chatbotHistory != null) {
-            return chatbotHistory.getResponse();
-        }
-
-        List<String> genres = ollamaService.extractGenres(chatbotRequest.getMessage());
+        List<String> genres = this.extractGenres(chatbotRequest.getMessage());
         if (genres.isEmpty()) {
             return "Tôi không hiểu bạn nói gì.";
         }
 
-        Pageable pageable = PageRequest.of(0, 5);
-        List<String> mangaNames = mangaRepository.findTop5MangaTitlesByGenres(genres, pageable);
+        Pageable pageable = PageRequest.of(0, 4);
+        List<String> mangaNames = mangaRepository.findTop4MangaTitlesByGenres(genres, pageable);
         if (mangaNames.isEmpty()) {
             return "Không tìm thấy manga nào phù hợp với thể loại bạn đã cung cấp.";
         }
@@ -62,7 +56,6 @@ public class ChatbotServiceImpl implements ChatbotService {
                 ChatbotHistory userChatbotHistory = ChatbotHistory.builder()
                         .user(user)
                         .message(chatbotRequest.getMessage())
-                        .response(String.join(", ", mangaNames))
                         .build();
 
                 chatbotRepository.save(userChatbotHistory);
@@ -70,6 +63,27 @@ public class ChatbotServiceImpl implements ChatbotService {
         });
 
         return String.join(", ", mangaNames);
+    }
+
+    private List<String> extractGenres(String message) {
+        List<String> genres = new ArrayList<>();
+
+        String lower = message.toLowerCase();
+
+        int index = lower.indexOf("thể loại:");
+        if (index != -1) {
+            String genrePart = lower.substring(index + "thể loại:".length()).trim();
+
+            String[] parts = genrePart.split(",");
+
+            for (String part : parts) {
+                String genre = part.trim();
+                if (!genre.isEmpty()) {
+                    genres.add(genre);
+                }
+            }
+        }
+        return genres;
     }
 
 }

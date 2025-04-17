@@ -28,9 +28,6 @@ public class ChatbotHistory extends BaseEntity {
     @Column(name = "message", columnDefinition = "LONGTEXT")
     private String message;
 
-    @Column(name = "response", columnDefinition = "LONGTEXT")
-    private String response;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

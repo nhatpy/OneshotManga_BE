@@ -7,5 +7,4 @@ import com.anime_social.models.ChatbotHistory;
 
 @Repository
 public interface ChatbotRepository extends JpaRepository<ChatbotHistory, String> {
-    ChatbotHistory findByMessage(String message);
 }
