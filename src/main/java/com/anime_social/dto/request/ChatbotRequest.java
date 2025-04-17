@@ -13,5 +13,13 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE)
 public class ChatbotRequest {
     String message;
-    Optional<String> userId;
+    String userId;
+
+    public Optional<String> getUserId() {
+        try {
+            return Optional.ofNullable(userId).map(String::valueOf);
+        } catch (NumberFormatException e) {
+            return Optional.empty();
+        }
+    }
 }

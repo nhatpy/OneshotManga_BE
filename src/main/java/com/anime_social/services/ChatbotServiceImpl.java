@@ -30,9 +30,7 @@ public class ChatbotServiceImpl implements ChatbotService {
     @Override
     public List<String> getHistory(String userId) {
         Pageable pageable = PageRequest.of(0, 2).withSort(Sort.by(Sort.Direction.DESC, "createAt"));
-        return chatbotRepository.findAll(pageable).stream()
-                .map(chatbotHistory -> chatbotHistory.getMessage())
-                .toList();
+        return chatbotRepository.findAllMessageByUserId(userId, pageable);
     }
 
     @Override
@@ -49,9 +47,8 @@ public class ChatbotServiceImpl implements ChatbotService {
         }
 
         chatbotRequest.getUserId().ifPresent(userId -> {
-            if (userRepository.existsById(userId)) {
-                User user = userRepository.findById(userId)
-                        .orElseThrow(() -> new CusRunTimeException(ErrorCode.USER_NOT_FOUND));
+            if (userRepository.existsById(userId) && !chatbotRepository.existsByMessage(chatbotRequest.getMessage())) {
+                User user = userRepository.findById(userId).orElse(null);
 
                 ChatbotHistory userChatbotHistory = ChatbotHistory.builder()
                         .user(user)
