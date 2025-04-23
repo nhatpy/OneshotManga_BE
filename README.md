@@ -12,7 +12,6 @@ Backend service for the Oneshot Mangaa - website for whom love reading manga, ma
 - Real-time Notifications with Websocket
 - Payment Integration with Momo UAT
 - Mail Service by using SMTP
-- Chatbot with Ollama
 
 ## 🛠️ Technology Stack
 
@@ -27,7 +26,6 @@ Backend service for the Oneshot Mangaa - website for whom love reading manga, ma
 - **Cloudinary**: Media storage
 - **Java Mail Sender**: Email service
 - **Momo UAT**: Payment service
-- **Ollama**: LLM for suggestion
 
 ### Development Tools
 - **Docker & Docker Compose**
