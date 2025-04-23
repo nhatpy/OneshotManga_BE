@@ -9,10 +9,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.anime_social.dto.request.ChatbotRequest;
-import com.anime_social.exception.CusRunTimeException;
-import com.anime_social.exception.ErrorCode;
 import com.anime_social.models.ChatbotHistory;
 import com.anime_social.models.User;
+import com.anime_social.repositories.CategoryRepository;
 import com.anime_social.repositories.ChatbotRepository;
 import com.anime_social.repositories.MangaRepository;
 import com.anime_social.repositories.UserRepository;
@@ -26,6 +25,7 @@ public class ChatbotServiceImpl implements ChatbotService {
     private final ChatbotRepository chatbotRepository;
     private final MangaRepository mangaRepository;
     private final UserRepository userRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public List<String> getHistory(String userId) {
@@ -58,28 +58,21 @@ public class ChatbotServiceImpl implements ChatbotService {
                 chatbotRepository.save(userChatbotHistory);
             }
         });
-
-        return String.join(", ", mangaNames);
+        StringBuilder response = new StringBuilder("Dưới đây là một số manga phù hợp với thể loại bạn đã cung cấp: ");
+        response.append(String.join(", ", mangaNames));
+        return response.toString();
     }
 
     private List<String> extractGenres(String message) {
         List<String> genres = new ArrayList<>();
 
-        String lower = message.toLowerCase();
-
-        int index = lower.indexOf("thể loại:");
-        if (index != -1) {
-            String genrePart = lower.substring(index + "thể loại:".length()).trim();
-
-            String[] parts = genrePart.split(",");
-
-            for (String part : parts) {
-                String genre = part.trim();
-                if (!genre.isEmpty()) {
-                    genres.add(genre);
-                }
+        List<String> allGenres = categoryRepository.findAllCategoryName();
+        for (String genre : allGenres) {
+            if (message.toLowerCase().contains(genre.toLowerCase())) {
+                genres.add(genre);
             }
         }
+
         return genres;
     }
 
