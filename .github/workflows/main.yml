@@ -1,0 +1,23 @@
+name: Build & Deploy to Docker Hub
+
+on:
+  push:
+    branches:
+      - main  # Tự động chạy khi có cập nhật lên nhánh main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v3
+
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+    - name: Build Docker image
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/myapp:latest .
+
+    - name: Push Docker image
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/myapp:latest
