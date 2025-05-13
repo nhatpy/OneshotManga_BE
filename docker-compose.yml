@@ -9,8 +9,7 @@ services:
     env_file:
       - ./.env
     environment:
-      - DB_HOST=mysql
-      - REDIS_HOST=redis
+      - SPRING_PROFILES_ACTIVE=prod
     depends_on:
       - mysql
       - redis
